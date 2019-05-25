@@ -19,13 +19,7 @@ public class HelloController {
     @RequestMapping("/save")
     public @ResponseBody String index() {
 
-//        Account account = new Account();
-//        account.setAccountName("郑泽屁明");
-//        account.setBalance(100f);
-//        account.setManageType(1);
-//        account.setPassword("666666");
-//
-//        accountDao.repository.save(account);
+        //accountDao.CreateUser();
 
         return "已保存!";
     }
