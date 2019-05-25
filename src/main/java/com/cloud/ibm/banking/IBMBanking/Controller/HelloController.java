@@ -4,6 +4,7 @@ import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,8 +32,8 @@ public class HelloController {
 
 
     @RequestMapping("/all")
-    public @ResponseBody  String GetOne() {
-        accountDao.findAccountFromAllTable(3,0,9);
+    public @ResponseBody String GetOne(@RequestParam(name = "id") Integer id) {
+        accountDao.findAccountFromAllTable(id,0,9);
 
         return "没找到!";
     }

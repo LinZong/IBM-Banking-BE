@@ -23,15 +23,15 @@ public class AccountDaoImpl
         sessionFactory = new Configuration().configure().buildSessionFactory();
 
         SplitTableInterceptor splitTableInterceptor =  new SplitTableInterceptor();
-        splitTableInterceptor.setTargetTableName("account");
+        splitTableInterceptor.setTargetTableName("account_information0");
         splitTableInterceptor.setTempTableName("account_information"+id);
 
-        Session session = sessionFactory.openSession();
+        Session session = sessionFactory.withOptions().interceptor(splitTableInterceptor).openSession();
 
-        TypedQuery<AccountInformation0Entity> eq = session.createQuery("FROM AccountInformation0Entity ",AccountInformation0Entity.class);
+        TypedQuery<AccountInformation0Entity> eq = session.createQuery("FROM AccountInformation0Entity",AccountInformation0Entity.class);
         List<AccountInformation0Entity> ac = ((Query<AccountInformation0Entity>) eq).list();
 
-
+        session.close();
 
         return null;
     }
