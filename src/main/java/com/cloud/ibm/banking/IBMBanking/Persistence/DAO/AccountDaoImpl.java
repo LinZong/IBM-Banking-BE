@@ -1,7 +1,7 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
-import com.cloud.ibm.banking.IBMBanking.Persistence.HibernateUtil;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.HibernateUtil;
 import org.apache.ibatis.jdbc.SQL;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

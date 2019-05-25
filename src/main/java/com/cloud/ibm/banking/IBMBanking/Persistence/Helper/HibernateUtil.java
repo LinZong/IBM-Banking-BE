@@ -1,4 +1,4 @@
-package com.cloud.ibm.banking.IBMBanking.Persistence;
+package com.cloud.ibm.banking.IBMBanking.Persistence.Helper;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
