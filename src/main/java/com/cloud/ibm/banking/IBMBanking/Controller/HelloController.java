@@ -19,7 +19,7 @@ public class HelloController {
     @RequestMapping("/save")
     public @ResponseBody String index() {
 
-        accountDao.CreateUser();
+        //accountDao.CreateUser();
 
         return "已保存!";
     }
@@ -29,7 +29,8 @@ public class HelloController {
     public @ResponseBody
     AccountInformation0Entity GetOne(@RequestBody Map<String,String> params) {
 
-        AccountInformation0Entity result = accountDao.GetUserByIdentity(params.get("identity"),params.get("password"));
+        AccountInformation0Entity result
+                = accountDao.GetUserByIdentity(params.get("identity"),params.get("password"));
 
         if(result != null) {
             return result;
