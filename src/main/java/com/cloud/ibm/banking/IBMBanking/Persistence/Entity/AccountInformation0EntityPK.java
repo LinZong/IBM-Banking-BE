@@ -2,6 +2,7 @@ package com.cloud.ibm.banking.IBMBanking.Persistence.Entity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import javax.persistence.IdClass;
 import java.io.Serializable;
 import java.util.Objects;
 

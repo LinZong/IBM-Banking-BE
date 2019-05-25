@@ -25,7 +25,7 @@ public class AccountDaoImpl
        try (Session session = sessionFactory.openSession())
        {
 
-           for (int i = 0; i < 10; i++)
+           for (int i = 0; i < 2; i++)
            {
                SQL Sql = new SQL();
                Sql.SELECT("*").FROM("account_information" + i).WHERE("identity = " + identity, "password = " + password);
@@ -57,12 +57,12 @@ public class AccountDaoImpl
 
            Transaction tr2 = session.beginTransaction();
            AccountInformation0Entity entity = new AccountInformation0Entity();
-           entity.setBalance(150);
+           entity.setBalance(200);
            entity.setManageType(1);
            entity.setPassword("123456");
-           entity.setIdentity("15521332013");
+           entity.setIdentity("wuwenjie");
            entity.setLastDealTime(20190525L);
-           entity.setId(1);
+           entity.setId(2);
 
            session.save(entity);
            tr2.commit();

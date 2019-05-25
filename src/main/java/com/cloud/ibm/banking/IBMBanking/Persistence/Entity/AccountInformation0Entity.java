@@ -1,22 +1,28 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.Entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "account_information0", schema = "banking", catalog = "")
 @IdClass(AccountInformation0EntityPK.class)
-public class AccountInformation0Entity {
+public class AccountInformation0Entity implements Serializable
+{
+
+
     private int id;
     private String password;
     private double balance;
     private int manageType;
     private int payingPassword;
+
+
     private String identity;
     private long lastDealTime;
 
-    @Id
     @Column(name = "Id")
+    @Id
     public int getId() {
         return id;
     }
@@ -65,8 +71,8 @@ public class AccountInformation0Entity {
         this.payingPassword = payingPassword;
     }
 
-    @Id
     @Column(name = "identity")
+    @Id
     public String getIdentity() {
         return identity;
     }
