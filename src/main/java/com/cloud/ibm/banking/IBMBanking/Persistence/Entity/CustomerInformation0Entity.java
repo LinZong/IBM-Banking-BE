@@ -5,103 +5,87 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "customer_information0", schema = "banking", catalog = "")
-public class CustomerInformation0Entity
-{
+public class CustomerInformation0Entity {
     private int id;
     private String name;
     private Byte sex;
     private String address;
     private byte customerType;
-    private Integer telNum;
+    private String telNum;
     private String mail;
 
     @Id
-    @Column(name = "Id", nullable = false)
-    public int getId()
-    {
+    @Column(name = "Id")
+    public int getId() {
         return id;
     }
 
-    public void setId(int id)
-    {
+    public void setId(int id) {
         this.id = id;
     }
 
     @Basic
-    @Column(name = "name", nullable = true, length = 20)
-    public String getName()
-    {
+    @Column(name = "name")
+    public String getName() {
         return name;
     }
 
-    public void setName(String name)
-    {
+    public void setName(String name) {
         this.name = name;
     }
 
     @Basic
-    @Column(name = "sex", nullable = true)
-    public Byte getSex()
-    {
+    @Column(name = "sex")
+    public Byte getSex() {
         return sex;
     }
 
-    public void setSex(Byte sex)
-    {
+    public void setSex(Byte sex) {
         this.sex = sex;
     }
 
     @Basic
-    @Column(name = "address", nullable = true, length = 50)
-    public String getAddress()
-    {
+    @Column(name = "address")
+    public String getAddress() {
         return address;
     }
 
-    public void setAddress(String address)
-    {
+    public void setAddress(String address) {
         this.address = address;
     }
 
     @Basic
-    @Column(name = "customer_type", nullable = false)
-    public byte getCustomerType()
-    {
+    @Column(name = "customer_type")
+    public byte getCustomerType() {
         return customerType;
     }
 
-    public void setCustomerType(byte customerType)
-    {
+    public void setCustomerType(byte customerType) {
         this.customerType = customerType;
     }
 
     @Basic
-    @Column(name = "tel_num", nullable = true)
-    public Integer getTelNum()
-    {
+    @Column(name = "tel_num")
+    public String getTelNum() {
         return telNum;
     }
 
-    public void setTelNum(Integer telNum)
-    {
+    public void setTelNum(String telNum) {
         this.telNum = telNum;
     }
 
     @Basic
-    @Column(name = "mail", nullable = true, length = 20)
-    public String getMail()
-    {
+    @Column(name = "mail")
+    public String getMail() {
         return mail;
     }
 
-    public void setMail(String mail)
-    {
+    public void setMail(String mail) {
         this.mail = mail;
     }
 
     @Override
-    public boolean equals(Object o)
-    {
+    public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         CustomerInformation0Entity that = (CustomerInformation0Entity) o;
@@ -115,8 +99,7 @@ public class CustomerInformation0Entity
     }
 
     @Override
-    public int hashCode()
-    {
+    public int hashCode() {
         return Objects.hash(id, name, sex, address, customerType, telNum, mail);
     }
 }

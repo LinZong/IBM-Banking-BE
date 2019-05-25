@@ -6,26 +6,12 @@
 
     <class name="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity"
            table="customer_information0" schema="banking">
-        <id name="id">
-            <column name="Id" sql-type="int(11)"/>
-        </id>
-        <property name="name">
-            <column name="name" sql-type="varchar(20)" length="20" not-null="true"/>
-        </property>
-        <property name="sex">
-            <column name="sex" sql-type="tinyint(1)" not-null="true"/>
-        </property>
-        <property name="address">
-            <column name="address" sql-type="varchar(50)" length="50" not-null="true"/>
-        </property>
-        <property name="customerType">
-            <column name="customer_type" sql-type="tinyint(1)"/>
-        </property>
-        <property name="telNum">
-            <column name="tel_num" sql-type="int(11)" not-null="true"/>
-        </property>
-        <property name="mail">
-            <column name="mail" sql-type="varchar(20)" length="20" not-null="true"/>
-        </property>
+        <id name="id" column="Id"/>
+        <property name="name" column="name"/>
+        <property name="sex" column="sex"/>
+        <property name="address" column="address"/>
+        <property name="customerType" column="customer_type"/>
+        <property name="telNum" column="tel_num"/>
+        <property name="mail" column="mail"/>
     </class>
 </hibernate-mapping>

@@ -9,7 +9,8 @@
             org.hibernate.dialect.MySQLDialect
         </property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://110.64.88.125:9939/banking</property>
+        <property name="hibernate.connection.url">jdbc:mysql://110.64.88.125:9939</property>
+
 
 
         <property name="hibernate.connection.username">
@@ -20,12 +21,14 @@
         </property>
 
 
-        <mapping resource="mappings/CustomerInformation0Entity.hbm.xml"/>
-        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity"/>
+        <mapping resource="mappings/AccountDeal0Entity.hbm.xml"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity"/>
         <mapping resource="mappings/AccountInformation0Entity.hbm.xml"/>
-        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity"/>
-        <mapping resource="mappings/AccountDeal1Entity.hbm.xml"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity"/>
+        <mapping resource="mappings/CustomerInformation0Entity.hbm.xml"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.FinancialProductEntity"/>
+        <mapping resource="mappings/FinancialProductEntity.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>
