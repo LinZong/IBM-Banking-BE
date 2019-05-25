@@ -7,7 +7,7 @@
     <class name="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity"
            table="account_information0" schema="banking">
         <id name="accountName">
-            <column name="accountName" sql-type="varchar(15)" length="15"/>
+            <column name="account_name" sql-type="varchar(15)" length="15"/>
         </id>
         <property name="password">
             <column name="password" sql-type="varchar(15)" length="15"/>
@@ -16,13 +16,16 @@
             <column name="balance" sql-type="float" precision="-1"/>
         </property>
         <property name="manageType">
-            <column name="manageType" sql-type="int(11)"/>
+            <column name="manage_type" sql-type="int(11)"/>
         </property>
         <property name="lastDealTime">
-            <column name="lastDealTime" sql-type="datetime" not-null="true"/>
+            <column name="last_deal_time" sql-type="datetime" not-null="true"/>
         </property>
         <property name="payingPassword">
-            <column name="payingPassword" sql-type="int(6)"/>
+            <column name="paying_password" sql-type="int(6)"/>
+        </property>
+        <property name="identity">
+            <column name="identity" sql-type="varchar(50)" length="50"/>
         </property>
     </class>
 </hibernate-mapping>

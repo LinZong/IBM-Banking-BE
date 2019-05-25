@@ -12,11 +12,12 @@ public class AccountInformation0Entity
     private String password;
     private double balance;
     private int manageType;
-    private Timestamp lastDealTime;
+    private Long lastDealTime;
     private int payingPassword;
+    private String identity;
 
     @Id
-    @Column(name = "accountName", nullable = false, length = 15)
+    @Column(name = "account_name", nullable = false, length = 15)
     public String getAccountName()
     {
         return accountName;
@@ -52,7 +53,7 @@ public class AccountInformation0Entity
     }
 
     @Basic
-    @Column(name = "manageType", nullable = false)
+    @Column(name = "manage_type", nullable = false)
     public int getManageType()
     {
         return manageType;
@@ -64,19 +65,19 @@ public class AccountInformation0Entity
     }
 
     @Basic
-    @Column(name = "lastDealTime", nullable = true)
-    public Timestamp getLastDealTime()
+    @Column(name = "last_deal_time", nullable = true)
+    public Long getLastDealTime()
     {
         return lastDealTime;
     }
 
-    public void setLastDealTime(Timestamp lastDealTime)
+    public void setLastDealTime(Long lastDealTime)
     {
         this.lastDealTime = lastDealTime;
     }
 
     @Basic
-    @Column(name = "payingPassword", nullable = false)
+    @Column(name = "paying_password", nullable = false)
     public int getPayingPassword()
     {
         return payingPassword;
@@ -85,6 +86,18 @@ public class AccountInformation0Entity
     public void setPayingPassword(int payingPassword)
     {
         this.payingPassword = payingPassword;
+    }
+
+    @Basic
+    @Column(name = "identity", nullable = false, length = 50)
+    public String getIdentity()
+    {
+        return identity;
+    }
+
+    public void setIdentity(String identity)
+    {
+        this.identity = identity;
     }
 
     @Override
@@ -98,12 +111,13 @@ public class AccountInformation0Entity
                 payingPassword == that.payingPassword &&
                 Objects.equals(accountName, that.accountName) &&
                 Objects.equals(password, that.password) &&
-                Objects.equals(lastDealTime, that.lastDealTime);
+                Objects.equals(lastDealTime, that.lastDealTime) &&
+                Objects.equals(identity, that.identity);
     }
 
     @Override
     public int hashCode()
     {
-        return Objects.hash(accountName, password, balance, manageType, lastDealTime, payingPassword);
+        return Objects.hash(accountName, password, balance, manageType, lastDealTime, payingPassword, identity);
     }
 }

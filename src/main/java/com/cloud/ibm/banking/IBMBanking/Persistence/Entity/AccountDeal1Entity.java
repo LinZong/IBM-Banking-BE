@@ -5,21 +5,21 @@ import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
-@Table(name = "account_deal0", schema = "banking", catalog = "")
-public class AccountDeal0Entity
+@Table(name = "account_deal1", schema = "banking", catalog = "")
+public class AccountDeal1Entity
 {
-    private Timestamp time;
+    private Long time;
     private Double amount;
     private String accountName;
 
     @Basic
     @Column(name = "time", nullable = true)
-    public Timestamp getTime()
+    public Long getTime()
     {
         return time;
     }
 
-    public void setTime(Timestamp time)
+    public void setTime(Long time)
     {
         this.time = time;
     }
@@ -37,7 +37,7 @@ public class AccountDeal0Entity
     }
 
     @Basic
-    @Column(name = "accountName", nullable = false, length = 15)
+    @Column(name = "account_name", nullable = false, length = 15)
     public String getAccountName()
     {
         return accountName;
@@ -53,7 +53,7 @@ public class AccountDeal0Entity
     {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AccountDeal0Entity that = (AccountDeal0Entity) o;
+        AccountDeal1Entity that = (AccountDeal1Entity) o;
         return Objects.equals(time, that.time) &&
                 Objects.equals(amount, that.amount) &&
                 Objects.equals(accountName, that.accountName);

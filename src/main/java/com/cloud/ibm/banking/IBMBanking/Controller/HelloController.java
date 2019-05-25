@@ -1,12 +1,12 @@
 package com.cloud.ibm.banking.IBMBanking.Controller;
 
 import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
@@ -31,10 +31,15 @@ public class HelloController {
     }
 
 
-    @RequestMapping("/all")
-    public @ResponseBody String GetOne(@RequestParam(name = "id") Integer id) {
-        accountDao.findAccountFromAllTable(id,0,9);
+    @PostMapping("/all")
+    public @ResponseBody AccountInformation0Entity GetOne(@RequestBody Map<String,String> params) {
 
-        return "没找到!";
+        AccountInformation0Entity result = accountDao.GetUserByIdentity(params.get("identity"),params.get("password"));
+
+        if(result != null) {
+            return result;
+
+        }
+        return null;
     }
 }

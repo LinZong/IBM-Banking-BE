@@ -4,6 +4,7 @@
 
 <hibernate-configuration>
     <session-factory>
+
         <property name="hibernate.dialect">
             org.hibernate.dialect.MySQLDialect
         </property>
@@ -18,10 +19,14 @@
             ibmbanking123.
         </property>
 
-        <mapping resource="mappings/AccountInformation0Entity.hbm.xml"/>
+
+        <mapping resource="mappings/CustomerInformation0Entity.hbm.xml"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity"/>
-        <mapping resource="mappings/AccountDeal0Entity.hbm.xml"/>
-        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity"/>
+        <mapping resource="mappings/AccountInformation0Entity.hbm.xml"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity"/>
+        <mapping resource="mappings/AccountDeal1Entity.hbm.xml"/>
+
 
     </session-factory>
 </hibernate-configuration>
