@@ -45,16 +45,6 @@ public class AccountDaoImpl
    public AccountInformation0Entity CreateUser()
    {
        try (Session session = sessionFactory.openSession()) {
-
-//           Transaction tr = session.beginTransaction();
-//
-//           CustomerInformation0Entity entity1=new CustomerInformation0Entity();
-//           entity1.setAddress("C10-537");
-//           entity1.setCustomerType((byte) 1);
-//           entity1.setId(1);
-//           session.save(entity1);
-//           tr.commit();
-
            Transaction tr2 = session.beginTransaction();
            AccountInformation0Entity entity = new AccountInformation0Entity();
            entity.setBalance(150);
