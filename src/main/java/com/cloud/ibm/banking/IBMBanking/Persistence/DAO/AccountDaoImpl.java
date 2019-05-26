@@ -24,11 +24,8 @@ public class AccountDaoImpl
    {
        try (Session session = sessionFactory.openSession())
        {
-
-           for (int i = 0; i < 10; i++)
-           {
                SQL Sql = new SQL();
-               Sql.SELECT("*").FROM("account_information" + i).WHERE("identity = " + identity, "password = " + password);
+               Sql.SELECT("*").FROM("account_information0 ").WHERE("identity = \'" + identity + "\'", "password = \'" + password + "\'");
 
                String queryString = Sql.toString();
 
@@ -37,7 +34,7 @@ public class AccountDaoImpl
                {
                    return (AccountInformation0Entity) result.get(0);
                }
-           }
+
            return null;
        }
    }
@@ -47,12 +44,12 @@ public class AccountDaoImpl
        try (Session session = sessionFactory.openSession()) {
            Transaction tr2 = session.beginTransaction();
            AccountInformation0Entity entity = new AccountInformation0Entity();
-           entity.setBalance(150);
+           entity.setBalance(200);
            entity.setManageType(1);
            entity.setPassword("123456");
-           entity.setIdentity("15521332013");
+           entity.setIdentity("czz");
            entity.setLastDealTime(20190525L);
-           entity.setId(1);
+           entity.setId(3);
 
            session.save(entity);
            tr2.commit();

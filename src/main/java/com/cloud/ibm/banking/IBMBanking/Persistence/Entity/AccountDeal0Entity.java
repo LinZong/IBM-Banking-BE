@@ -1,11 +1,13 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.Entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
 @Table(name = "account_deal0", schema = "banking", catalog = "")
-public class AccountDeal0Entity {
+public class AccountDeal0Entity implements Serializable
+{
     private Long time;
     private Double amount;
     private int id;
