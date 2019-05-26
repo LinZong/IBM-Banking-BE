@@ -6,7 +6,7 @@
 
     <class name="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity"
            table="customer_information0" schema="banking">
-        <id name="id" column="Id"/>
+        <id name="id" column="id"/>
         <property name="name" column="name"/>
         <property name="sex" column="sex"/>
         <property name="address" column="address"/>

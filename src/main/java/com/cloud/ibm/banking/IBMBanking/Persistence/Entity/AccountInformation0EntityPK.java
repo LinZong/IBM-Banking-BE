@@ -6,7 +6,7 @@ import javax.persistence.IdClass;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class AccountInformation0EntityPK implements Serializable {
+public class AccountInformation0EntityPK extends BankingEntity implements Serializable {
     private int id;
     private String identity;
 

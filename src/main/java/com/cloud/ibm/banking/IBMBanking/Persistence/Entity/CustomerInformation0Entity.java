@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "customer_information0", schema = "banking", catalog = "")
-public class CustomerInformation0Entity implements Serializable
+public class CustomerInformation0Entity extends BankingEntity implements Serializable
 {
     private int id;
     private String name;
@@ -17,7 +17,7 @@ public class CustomerInformation0Entity implements Serializable
     private String mail;
 
     @Id
-    @Column(name = "Id")
+    @Column(name = "id")
     public int getId() {
         return id;
     }

@@ -5,6 +5,7 @@ import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil
 {
+
     private static SessionFactory sessionFactory;
 
     public static SessionFactory GetSessionFactory()
@@ -23,6 +24,4 @@ public class HibernateUtil
         si.setTempTableName(ModifiedTableName);
         return si;
     }
-
-
 }
