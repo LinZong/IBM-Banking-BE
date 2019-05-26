@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "account_deal0", schema = "banking", catalog = "")
-public class AccountDeal0Entity implements Serializable
+public class AccountDeal0Entity extends BankingEntity implements Serializable
 {
     private Long time;
     private Double amount;

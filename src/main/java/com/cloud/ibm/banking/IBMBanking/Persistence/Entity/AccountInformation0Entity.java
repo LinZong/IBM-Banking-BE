@@ -19,7 +19,7 @@ public class AccountInformation0Entity implements Serializable
     private String identity;
     private long lastDealTime;
 
-    @Column(name = "Id")
+    @Column(name = "id")
     @Id
     public int getId() {
         return id;

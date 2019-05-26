@@ -6,7 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "financial_product", schema = "banking", catalog = "")
-public class FinancialProductEntity implements Serializable
+public class FinancialProductEntity extends BankingEntity implements Serializable
 {
     private int id;
     private String name;

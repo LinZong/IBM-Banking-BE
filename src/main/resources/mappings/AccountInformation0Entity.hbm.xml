@@ -7,7 +7,7 @@
     <class name="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity"
            table="account_information0" schema="banking">
         <composite-id>
-            <key-property name="id" column="Id"/>
+            <key-property name="id" column="id"/>
             <key-property name="identity" column="identity"/>
         </composite-id>
         <property name="password" column="password"/>
