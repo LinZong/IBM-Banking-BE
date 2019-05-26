@@ -20,7 +20,6 @@ public class LoginController
     @Autowired
     private AccountService accountService;
 
-
     @PostMapping("/login")
     public @ResponseBody LoginResponse Login(@RequestBody Map<String,String> params)
     {
@@ -28,3 +27,34 @@ public class LoginController
         return resp;
     }
 }
+
+
+/*
+*  A simple workflow of backend-api. Demonstrate the login api above.
+*
+*  Prepare:(Auto Injected accountService with @Authwired annotation) -->
+*       LoginController -> MapUrl (/login) -> Route to service layer (AccountService)
+*       -> call Login method.
+*
+*       AccountService :
+*           Call AccountDAO to fetch db with conditions identity and password
+*           judge correction by whether there are records returned?
+*
+*               -> if returned -> fetch customer_information
+*                       -> return to controller
+*                           -> return to front-end.
+*
+*                -> not found -> return to front-end
+*                                   -> failed.
+*
+*
+*
+*        Controller : Route request to specified service layer.
+*
+*        Service : Handle request, do logic, combine results.
+*
+*        DAO (Database Access Object) : operates db logic here.
+*
+*
+*
+* */
