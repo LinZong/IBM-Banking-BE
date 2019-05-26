@@ -1,17 +1,14 @@
 package com.cloud.ibm.banking.IBMBanking.Service;
 
+import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity;
 
 import java.util.List;
 
 public class TransactionService {
 
-    public void testPayingPassWord(int Id,int payingPassingWord)
-    {
-
-    }
-
-    public AccountDeal0Entity saveMoney(double money, AccountDeal0Entity accountDeal0Entity, int paying_password)
+    AccountDaoImpl accountDao=new AccountDaoImpl();
+    public AccountDeal0Entity saveMoney(double money, AccountDeal0Entity accountDeal0Entity)
     {
         long time=accountDeal0Entity.getTime();
         double amount=accountDeal0Entity.getAmount();
@@ -19,12 +16,12 @@ public class TransactionService {
         int productId=accountDeal0Entity.getProductId();
         int accountId=accountDeal0Entity.getAccountId();
 
-        accountDeal0Entity.setAmount(money+amount);
+        accountDeal0Entity.setAmount(money + amount);
         accountDeal0Entity.setTime(System.currentTimeMillis());
         return accountDeal0Entity;
     }
 
-    public AccountDeal0Entity withdrawMoney(double money,AccountDeal0Entity accountDeal0Entity)
+    public AccountDeal0Entity withdrawMoney(double money,AccountDeal0Entity accountDeal0Entity,int paying_password)
     {
         long time=accountDeal0Entity.getTime();
         double amount=accountDeal0Entity.getAmount();
@@ -32,19 +29,22 @@ public class TransactionService {
         int productId=accountDeal0Entity.getProductId();
         int accountId=accountDeal0Entity.getAccountId();
 
-        if(amount>=money)
-        {
-            accountDeal0Entity.setAmount(amount-money);
-            accountDeal0Entity.setTime(System.currentTimeMillis());
+        if(accountDao.testPayingPassWord(id,paying_password).getUuid()!=null) {
+            if (amount >= money) {
+                accountDeal0Entity.setAmount(amount - money);
+                accountDeal0Entity.setTime(System.currentTimeMillis());
+            } else {
+                System.out.println("当前账户余额不足");
+            }
         }
         else
         {
-            System.out.println("当前账户余额不足");
+            System.out.println("支付密码错误");
         }
         return accountDeal0Entity;
     }
 
-    public List<AccountDeal0Entity> transfer(double money, List<AccountDeal0Entity> accountDeal0Entities)
+    public List<AccountDeal0Entity> transfer(double money, List<AccountDeal0Entity> accountDeal0Entities,int paying_password)
     {
         long time1=accountDeal0Entities.get(0).getTime();
         double amount1=accountDeal0Entities.get(0).getAmount();
@@ -58,17 +58,20 @@ public class TransactionService {
         int productId2=accountDeal0Entities.get(1).getProductId();
         int accountId2=accountDeal0Entities.get(1).getAccountId();
 
-        if(amount1>=money)
-        {
-            accountDeal0Entities.get(0).setAmount(amount1-money);
-            accountDeal0Entities.get(0).setTime(System.currentTimeMillis());
+        if(accountDao.testPayingPassWord(id1,paying_password).getUuid()!=null) {
+            if (amount1 >= money) {
+                accountDeal0Entities.get(0).setAmount(amount1 - money);
+                accountDeal0Entities.get(0).setTime(System.currentTimeMillis());
 
-            accountDeal0Entities.get(1).setAmount(amount2+money);
-            accountDeal0Entities.get(1).setTime(System.currentTimeMillis());
+                accountDeal0Entities.get(1).setAmount(amount2 + money);
+                accountDeal0Entities.get(1).setTime(System.currentTimeMillis());
+            } else {
+                System.out.println("当前账户余额不足");
+            }
         }
         else
         {
-            System.out.println("当前账户余额不足");
+            System.out.println("支付密码错误");
         }
         return accountDeal0Entities;
     }

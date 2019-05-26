@@ -1,7 +1,9 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.GenGUID;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.HibernateUtil;
+import com.cloud.ibm.banking.IBMBanking.Service.ReturnToFront;
 import org.apache.ibatis.jdbc.SQL;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -38,7 +40,29 @@ public class AccountDaoImpl
            return null;
        }
    }
+    public ReturnToFront testPayingPassWord(int Id, int payingPassingWord)
+    {
+        ReturnToFront returnToFront=new ReturnToFront();
+        try (Session session = sessionFactory.openSession())
+        {
+            SQL Sql = new SQL();
+            for(int i=0;i<10;i++) {
+                Sql.SELECT("*").FROM("account_information"+i).WHERE("id = \'" + Id + "\'", "paying_password = \'" + payingPassingWord + "\'");
+            }
+            String queryString = Sql.toString();
 
+            if (!queryString.isEmpty())
+            {
+               returnToFront.setIfSuccess(true);
+               returnToFront.setUuid(GenGUID.genGUID());
+            }
+            else
+                returnToFront.setIfSuccess(false);
+                returnToFront.setUuid(null);
+        }
+
+        return  returnToFront;
+    }
    public AccountInformation0Entity CreateUser()
    {
        try (Session session = sessionFactory.openSession()) {
@@ -47,9 +71,9 @@ public class AccountDaoImpl
            entity.setBalance(200);
            entity.setManageType(1);
            entity.setPassword("123456");
-           entity.setIdentity("czz");
+           entity.setIdentity("lsy");
            entity.setLastDealTime(20190525L);
-           entity.setId(3);
+           entity.setId(4);
 
            session.save(entity);
            tr2.commit();

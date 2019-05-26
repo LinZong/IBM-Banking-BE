@@ -16,8 +16,6 @@ public class AccountInformation0Entity implements Serializable
     private double balance;
     private int manageType;
     private int payingPassword;
-
-
     private String identity;
     private long lastDealTime;
 

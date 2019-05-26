@@ -9,27 +9,26 @@ import java.util.Map;
 
 @RestController
 @EnableAutoConfiguration
-@RequestMapping("/save")
+
 public class HelloController {
+
 
     @Autowired
     private AccountDaoImpl accountDao;
 
-
+    @RequestMapping("/save")
     public @ResponseBody String index() {
 
-        //accountDao.CreateUser();
+        accountDao.CreateUser();
 
         return "已保存!";
     }
 
 
     @PostMapping("/all")
-    public @ResponseBody
-    AccountInformation0Entity GetOne(@RequestBody Map<String,String> params) {
+    public @ResponseBody AccountInformation0Entity GetOne(@RequestBody Map<String,String> params) {
 
         AccountInformation0Entity result = accountDao.GetUserByIdentity(params.get("identity"),params.get("password"));
-
 
         if(result != null) {
             return result;
