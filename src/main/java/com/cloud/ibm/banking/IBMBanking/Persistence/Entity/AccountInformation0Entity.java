@@ -1,5 +1,7 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -30,6 +32,7 @@ public class AccountInformation0Entity implements Serializable
     }
 
     @Basic
+    @JsonIgnore
     @Column(name = "password")
     public String getPassword() {
         return password;
@@ -60,6 +63,7 @@ public class AccountInformation0Entity implements Serializable
     }
 
     @Basic
+    @JsonIgnore
     @Column(name = "paying_password")
     public int getPayingPassword() {
         return payingPassword;
