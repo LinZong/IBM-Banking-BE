@@ -33,7 +33,7 @@ public class TransactionController {
     CommonResponse withdrawMoney(@RequestBody Map<String,String> params)
     {
         CommonResponse resp = transactionService.withdrawMoney(Double.parseDouble(params.get("money")),
-                Integer.parseInt(params.get("id")),Integer.parseInt(params.get("buckey")),Integer.parseInt(params.get("payingPassword")));
+                Integer.parseInt(params.get("id")),Integer.parseInt(params.get("bucket")),Integer.parseInt(params.get("payingPassword")));
         return resp;
     }
 
@@ -42,9 +42,9 @@ public class TransactionController {
     CommonResponse transfer(@RequestBody Map<String,String> params)
     {
         CommonResponse resp = transactionService.transfer(Double.parseDouble(params.get("money")),
-                Integer.parseInt(params.get("id")),Integer.parseInt(params.get("buckey")),
+                Integer.parseInt(params.get("id")),Integer.parseInt(params.get("bucket")),
                 Integer.parseInt(params.get("payingPassword")),
-                Integer.parseInt(params.get("otherId")));
+               params.get("otherIdentity"));
         return resp;
     }
 }

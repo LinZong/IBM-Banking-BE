@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.cloud.ibm.banking.IBMBanking.Service.AccountService.IdentityBucketIndex;
+
 
 @Repository
 public class AccountDaoImpl
@@ -100,7 +102,7 @@ public class AccountDaoImpl
         }
     }
 
-    public WithBucket<AccountInformation0Entity> save_money(double money, int id, int bucket)
+    public int save_money(double money, int id, int bucket)
     {
         Session session = sessionFactory.openSession();
         Transaction tr = session.beginTransaction();
@@ -110,7 +112,7 @@ public class AccountDaoImpl
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
-                    .SET("balance = :money")
+                    .SET("balance = balance + :money")
                     .WHERE("id = :id");
 
             int count = session.createSQLQuery(query.toString())
@@ -119,6 +121,7 @@ public class AccountDaoImpl
                     .executeUpdate();
 
             tr.commit();
+            return count;
 
         } catch (Exception ex)
         {
@@ -131,7 +134,7 @@ public class AccountDaoImpl
                 session.close();
             }
         }
-        return null;
+        return 0;
     }
 
     public int withdraw_money(double money, int id, int bucket)
@@ -167,9 +170,47 @@ public class AccountDaoImpl
         return -1;
     }
 
-    public int transfer_money(double money, int id, int buckey, int payingPassword, int otherId)
+    public int transfer_money(double money, int id, int bucket,int otherId,String otherIdentity)
     {
-        return 0;
+        Session session = sessionFactory.openSession();
+
+        Transaction tr = session.beginTransaction();
+        int otherBucket = IdentityBucketIndex(otherIdentity);
+        try
+        {
+            SQL query = new SQL();
+            query
+                    .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                    .SET("balance = balance - :money")
+                    .WHERE("id = :id");
+
+            int effects = session.createSQLQuery(query.toString())
+                    .setParameter("money", money)
+                    .setParameter("id", id)
+                    .executeUpdate();
+            SQL query1 = new SQL();
+            query1
+                    .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + otherBucket)
+                    .SET("balance = balance + :money")
+                    .WHERE("id = :otherId");
+            int effects1 = session.createSQLQuery(query1.toString())
+                    .setParameter("money", money)
+                    .setParameter("otherId", otherId)
+                    .executeUpdate();
+
+            tr.commit();
+            return effects+effects1;
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+            tr.rollback();
+
+        } finally
+        {
+            session.close();
+        }
+        return -1;
     }
 
     public AccountInformation0Entity queryWithdrawAccount(int id,int bucket)
@@ -227,6 +268,43 @@ public class AccountDaoImpl
                 List result = session.createSQLQuery(query.toString())
                         .setParameter("id", identity)
                         .setParameter("pw", password)
+                        .addEntity(AccountInformation0Entity.class)
+                        .getResultList();
+
+                if (!result.isEmpty())
+                {
+                    return new WithBucket<>(i, (AccountInformation0Entity) result.get(0));
+                }
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        } finally
+        {
+            if (session != null)
+            {
+                session.close();
+            }
+        }
+        return null;
+    }
+
+    public WithBucket<AccountInformation0Entity> GetUserInfoByIdentity(String identity)
+    {
+        Session session = sessionFactory.openSession();
+        int tableCount = BucketNamingStrategyCollections.TableRange;
+        try
+        {
+            for (int i = 0; i < tableCount; i++)
+            {
+                SQL query = new SQL();
+                query
+                        .SELECT("*")
+                        .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + i)
+                        .WHERE("identity = :id");
+
+                List result = session.createSQLQuery(query.toString())
+                        .setParameter("id", identity)
                         .addEntity(AccountInformation0Entity.class)
                         .getResultList();
 
