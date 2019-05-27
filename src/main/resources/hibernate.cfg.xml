@@ -21,6 +21,7 @@
         </property>
 
 
+
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity"/>
         <mapping resource="mappings/AccountDeal0Entity.hbm.xml"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity"/>
@@ -29,6 +30,7 @@
         <mapping resource="mappings/CustomerInformation0Entity.hbm.xml"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.FinancialProductEntity"/>
         <mapping resource="mappings/FinancialProductEntity.hbm.xml"/>
+        <mapping resource="mappings/AccountDeal0Entity.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>

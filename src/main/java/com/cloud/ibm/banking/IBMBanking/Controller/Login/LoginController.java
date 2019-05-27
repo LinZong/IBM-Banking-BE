@@ -32,7 +32,7 @@ public class LoginController
 /*
 *  A simple workflow of backend-api. Demonstrate the login api above.
 *
-*  Prepare:(Auto Injected accountService with @Authwired annotation) -->
+*  Prepare:(Auto Injected accountService with @Autowired annotation) -->
 *       LoginController -> MapUrl (/login) -> Route to service layer (AccountService)
 *       -> call Login method.
 *

@@ -1,78 +1,36 @@
 package com.cloud.ibm.banking.IBMBanking.Service;
 
+import com.cloud.ibm.banking.IBMBanking.Model.CommonResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.LoginResponse;
 import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.WithBucket;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
-
+@Component
 public class TransactionService {
+    @Autowired
+    private AccountDaoImpl accountDao;
 
-    AccountDaoImpl accountDao=new AccountDaoImpl();
-    public AccountDeal0Entity saveMoney(double money, AccountDeal0Entity accountDeal0Entity)
-    {
-        long time=accountDeal0Entity.getTime();
-        double amount=accountDeal0Entity.getAmount();
-        int id=accountDeal0Entity.getId();
-        int productId=accountDeal0Entity.getProductId();
-        int accountId=accountDeal0Entity.getAccountId();
-
-        accountDeal0Entity.setAmount(money + amount);
-        accountDeal0Entity.setTime(System.currentTimeMillis());
-        return accountDeal0Entity;
+    public CommonResponse saveMoney(double money, int id, int buckey) {
+        WithBucket<AccountInformation0Entity> user = accountDao.save_money(money, id, buckey);
+        if (user != null) {
+            return new CommonResponse(1001);
+        }
+        return new CommonResponse(1000);
     }
 
-    public AccountDeal0Entity withdrawMoney(double money,AccountDeal0Entity accountDeal0Entity,int paying_password)
-    {
-        long time=accountDeal0Entity.getTime();
-        double amount=accountDeal0Entity.getAmount();
-        int id=accountDeal0Entity.getId();
-        int productId=accountDeal0Entity.getProductId();
-        int accountId=accountDeal0Entity.getAccountId();
-
-        if(accountDao.testPayingPassWord(id,paying_password).getUuid()!=null) {
-            if (amount >= money) {
-                accountDeal0Entity.setAmount(amount - money);
-                accountDeal0Entity.setTime(System.currentTimeMillis());
-            } else {
-                System.out.println("当前账户余额不足");
-            }
-        }
-        else
-        {
-            System.out.println("支付密码错误");
-        }
-        return accountDeal0Entity;
+    public CommonResponse withdrawMoney(double money, int id, int buckey, int payingPassword) {
+        int user = accountDao.withdraw_money(money, id, buckey, payingPassword);
+        return new CommonResponse(user);
     }
 
-    public List<AccountDeal0Entity> transfer(double money, List<AccountDeal0Entity> accountDeal0Entities,int paying_password)
-    {
-        long time1=accountDeal0Entities.get(0).getTime();
-        double amount1=accountDeal0Entities.get(0).getAmount();
-        int id1=accountDeal0Entities.get(0).getId();
-        int productId1=accountDeal0Entities.get(0).getProductId();
-        int accountId1=accountDeal0Entities.get(0).getAccountId();
-
-        long time2=accountDeal0Entities.get(1).getTime();
-        double amount2=accountDeal0Entities.get(1).getAmount();
-        int id2=accountDeal0Entities.get(1).getId();
-        int productId2=accountDeal0Entities.get(1).getProductId();
-        int accountId2=accountDeal0Entities.get(1).getAccountId();
-
-        if(accountDao.testPayingPassWord(id1,paying_password).getUuid()!=null) {
-            if (amount1 >= money) {
-                accountDeal0Entities.get(0).setAmount(amount1 - money);
-                accountDeal0Entities.get(0).setTime(System.currentTimeMillis());
-
-                accountDeal0Entities.get(1).setAmount(amount2 + money);
-                accountDeal0Entities.get(1).setTime(System.currentTimeMillis());
-            } else {
-                System.out.println("当前账户余额不足");
-            }
-        }
-        else
-        {
-            System.out.println("支付密码错误");
-        }
-        return accountDeal0Entities;
+    public CommonResponse transfer(double money, int id, int buckey, int payingPassword, int otherId) {
+        int user = accountDao.transfer_money(money, id, buckey, payingPassword, otherId);
+        return new CommonResponse(user);
     }
 }

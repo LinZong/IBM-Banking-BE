@@ -1,16 +1,21 @@
 package com.cloud.ibm.banking.IBMBanking.Model;
 
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
 
 public class LoginResponse extends CommonResponse
 {
-    public LoginResponse(int statusCode, CustomerInformation0Entity customerInfo)
+    private CustomerInformation0Entity CustomerInfo;
+    private int bucket;
+    private String identity;
+
+    public LoginResponse(int statusCode, CustomerInformation0Entity customerInfo,int bucket,String identity)
     {
         super(statusCode);
         CustomerInfo = customerInfo;
+        this.bucket=bucket;
+        this.identity=identity;
     }
-
-    private CustomerInformation0Entity CustomerInfo;
 
     public void setCustomerInfo(CustomerInformation0Entity customerInfo)
     {
@@ -20,5 +25,21 @@ public class LoginResponse extends CommonResponse
     public CustomerInformation0Entity getCustomerInfo()
     {
         return CustomerInfo;
+    }
+
+    public void setBucket(int bucket) {
+        this.bucket = bucket;
+    }
+
+    public int getBucket() {
+        return bucket;
+    }
+
+    public void setIdentity(String identity) {
+        this.identity = identity;
+    }
+
+    public String getIdentity() {
+        return identity;
     }
 }

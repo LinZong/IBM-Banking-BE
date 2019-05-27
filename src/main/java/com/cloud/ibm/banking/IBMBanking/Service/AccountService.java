@@ -62,9 +62,9 @@ public class AccountService
              int id = user.getResult().getId();
 
              CustomerInformation0Entity cust = accountDao.GetCustomerInformation(bucket,id);
-             return new LoginResponse(1001,cust);
+             return new LoginResponse(1001,cust,bucket,user.getResult().getIdentity());
          }
-         return new LoginResponse(1000,null);
+         return new LoginResponse(1000,null,-1,null);
     }
 }
 

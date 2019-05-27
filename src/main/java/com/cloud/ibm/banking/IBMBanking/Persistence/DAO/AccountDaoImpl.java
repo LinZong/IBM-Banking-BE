@@ -44,28 +44,141 @@ public class AccountDaoImpl
            return !result.isEmpty() ? (CustomerInformation0Entity) result.get(0) : null;
        }
    }
-    public ReturnToFront testPayingPassWord(int Id, int payingPassingWord)
-    {
-        ReturnToFront returnToFront=new ReturnToFront();
-        try (Session session = sessionFactory.openSession())
-        {
-            SQL Sql = new SQL();
-            for(int i=0;i<10;i++) {
-                Sql.SELECT("*").FROM("account_information"+i).WHERE("id = \'" + Id + "\'", "paying_password = \'" + payingPassingWord + "\'");
-            }
-            String queryString = Sql.toString();
+   public WithBucket<AccountInformation0Entity> save_money(double money,int id,int buckey) {
+       Session session = sessionFactory.openSession();
+       try  {
 
-            if (!queryString.isEmpty())
-            {
-               returnToFront.setIfSuccess(true);
-               returnToFront.setUuid(GenGUID.genGUID());
+               SQL query = new SQL();
+               query
+                       .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + buckey)
+                       .SET("balance = balance+ :money")
+                       .WHERE("id = :id");
+
+               List result = session.createSQLQuery(query.toString())
+                       .setParameter("money", money)
+                       .setParameter("id",id)
+                       .addEntity(AccountInformation0Entity.class)
+                       .getResultList();
+
+
+               if (!result.isEmpty()) {
+                   return new WithBucket<>(buckey, (AccountInformation0Entity) result.get(0));
+               }
+
+       }
+       catch (Exception ex) {
+           ex.printStackTrace();
+       }
+       finally
+       {
+           if (session != null)
+           {
+               session.close();
+           }
+       }
+       return null;
+   }
+    public int withdraw_money(double money,int id,int buckey,int payingPassword) {
+        Session session = sessionFactory.openSession();
+        if(!testPayingPassWord(id,payingPassword,buckey))
+            return 1002; //支付密码错误
+        else if(queryBalance(id,buckey)<money)
+            return 1003;//余额不足
+        else {
+            try {
+                SQL query = new SQL();
+                query
+                        .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + buckey)
+                        .SET("balance = balance- :money")
+                        .WHERE("id = :id");
+
+                List result = session.createSQLQuery(query.toString())
+                        .setParameter("money", money)
+                        .setParameter("id", id)
+                        .addEntity(AccountInformation0Entity.class)
+                        .getResultList();
+                if (!result.isEmpty()) {
+                    return 1001;
+                }
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            } finally {
+                if (session != null) {
+                    session.close();
+                }
             }
-            else
-                returnToFront.setIfSuccess(false);
-                returnToFront.setUuid(null);
         }
+        return 1000;
+    }
+    public int transfer_money(double money,int id,int buckey,int payingPassword,int otherId)
+    {
+        return 0;
+    }
+    public boolean testPayingPassWord(int id, int payingPassingWord,int bucket)
+    {
 
-        return  returnToFront;
+        Session session = sessionFactory.openSession();
+        try {
+                SQL query = new SQL();
+                query
+                        .SELECT("*")
+                        .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                        .WHERE("id = :id")
+                        .WHERE("payingPassword = :payingPassingWord");
+
+                List result = session.createSQLQuery(query.toString())
+                        .setParameter("id", id)
+                        .setParameter("payingPassword",payingPassingWord)
+                        .addEntity(AccountInformation0Entity.class)
+                        .getResultList();
+
+                if (!result.isEmpty()) {
+                    return true;
+                }
+
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally
+        {
+            if (session != null)
+            {
+                session.close();
+            }
+        }
+        return false;
+    }
+    public double queryBalance(int id,int bucket)
+    {
+        Session session = sessionFactory.openSession();
+        try {
+                SQL query = new SQL();
+                query
+                        .SELECT("*")
+                        .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                        .WHERE("id = :id");
+
+            List result = session.createSQLQuery(query.toString())
+                    .setParameter("id", id)
+                    .addEntity(AccountInformation0Entity.class)
+                    .getResultList();
+
+            System.out.println(result);
+
+        }
+        catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        finally
+        {
+            if (session != null)
+            {
+                session.close();
+            }
+        }
+        return -1;
     }
     public WithBucket<AccountInformation0Entity> GetUserByIdentity(String identity,String password)
     {
