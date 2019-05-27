@@ -2,10 +2,8 @@ package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
-import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.GenGUID;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.BucketNamingStrategyCollections;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.WithBucket;
-import com.cloud.ibm.banking.IBMBanking.Service.ReturnToFront;
 import org.apache.ibatis.jdbc.SQL;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -46,7 +44,7 @@ public class AccountDaoImpl
         }
     }
 
-    public WithBucket<AccountInformation0Entity> save_money(double money, int id, int buckey)
+    public WithBucket<AccountInformation0Entity> save_money(double money, int id, int bucket)
     {
         Session session = sessionFactory.openSession();
         Transaction tr = session.beginTransaction();
@@ -55,7 +53,7 @@ public class AccountDaoImpl
 
             SQL query = new SQL();
             query
-                    .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + buckey)
+                    .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
                     .SET("balance = :money")
                     .WHERE("id = :id");
 
@@ -85,45 +83,42 @@ public class AccountDaoImpl
         return null;
     }
 
-    public int withdraw_money(double money, int id, int buckey, int payingPassword)
+    public int withdraw_money(double money, int id, int bucket)
     {
         Session session = sessionFactory.openSession();
-        if (!testPayingPassWord(id, payingPassword, buckey))
-            return 1002; //支付密码错误
-        else if (queryBalance(id, buckey) < money)
-            return 1003;//余额不足
-        else
-        {
+//        if (!queryWithdrawAccount(id, payingPassword, bucket))
+//            return 1002; //支付密码错误
+//        else if (queryBalance(id, bucket) < money)
+//            return 1003;//余额不足
+//        else
+//        {
+        Transaction tr = session.beginTransaction();
             try
             {
                 SQL query = new SQL();
                 query
-                        .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + buckey)
-                        .SET("balance = balance- :money")
+                        .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                        .SET("balance = balance - :money")
                         .WHERE("id = :id");
 
-                List result = session.createSQLQuery(query.toString())
+               int effects = session.createSQLQuery(query.toString())
                         .setParameter("money", money)
                         .setParameter("id", id)
-                        .addEntity(AccountInformation0Entity.class)
-                        .getResultList();
-                if (!result.isEmpty())
-                {
-                    return 1001;
-                }
+                        .executeUpdate();
+
+               tr.commit();
+               return effects;
 
             } catch (Exception ex)
             {
                 ex.printStackTrace();
+                tr.rollback();
+
             } finally
             {
-                if (session != null)
-                {
-                    session.close();
-                }
+                session.close();
             }
-        }
-        return 1000;
+        return -1;
     }
 
     public int transfer_money(double money, int id, int buckey, int payingPassword, int otherId)
@@ -131,45 +126,9 @@ public class AccountDaoImpl
         return 0;
     }
 
-    public boolean testPayingPassWord(int id, int payingPassingWord, int bucket)
+    public AccountInformation0Entity queryWithdrawAccount(int id,int bucket)
     {
 
-        Session session = sessionFactory.openSession();
-        try
-        {
-            SQL query = new SQL();
-            query
-                    .SELECT("*")
-                    .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
-                    .WHERE("id = :id")
-                    .WHERE("payingPassword = :payingPassingWord");
-
-            List result = session.createSQLQuery(query.toString())
-                    .setParameter("id", id)
-                    .setParameter("payingPassword", payingPassingWord)
-                    .addEntity(AccountInformation0Entity.class)
-                    .getResultList();
-
-            if (!result.isEmpty())
-            {
-                return true;
-            }
-
-        } catch (Exception ex)
-        {
-            ex.printStackTrace();
-        } finally
-        {
-            if (session != null)
-            {
-                session.close();
-            }
-        }
-        return false;
-    }
-
-    public double queryBalance(int id, int bucket)
-    {
         Session session = sessionFactory.openSession();
         try
         {
@@ -184,11 +143,15 @@ public class AccountDaoImpl
                     .addEntity(AccountInformation0Entity.class)
                     .getResultList();
 
-            System.out.println(result);
+            if (!result.isEmpty())
+            {
+                return (AccountInformation0Entity) result.get(0);
+            }
 
         } catch (Exception ex)
         {
             ex.printStackTrace();
+
         } finally
         {
             if (session != null)
@@ -196,8 +159,10 @@ public class AccountDaoImpl
                 session.close();
             }
         }
-        return -1;
+        return null;
     }
+
+
 
     public WithBucket<AccountInformation0Entity> GetUserByIdentity(String identity, String password)
     {
