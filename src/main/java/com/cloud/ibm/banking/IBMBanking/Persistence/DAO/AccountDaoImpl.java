@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 import java.math.BigInteger;
 import java.util.List;
 
+import static com.cloud.ibm.banking.IBMBanking.Persistence.Helper.DateUtil.date2TimeStamp;
+import static com.cloud.ibm.banking.IBMBanking.Persistence.Helper.DateUtil.timeStamp;
 import static com.cloud.ibm.banking.IBMBanking.Service.AccountService.IdentityBucketIndex;
 
 
@@ -127,11 +129,12 @@ public class AccountDaoImpl {
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
-                    .SET("balance = balance - :money")
+                    .SET("balance = balance - :money","last_deal_time = :lastDealTime")
                     .WHERE("id = :id");
 
             int effects = session.createSQLQuery(query.toString())
                     .setParameter("money", money)
+                    .setParameter("lastDealTime",timeStamp())
                     .setParameter("id", id)
                     .executeUpdate();
 
