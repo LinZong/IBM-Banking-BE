@@ -22,20 +22,17 @@ public class LoginController
     @PostMapping("/login")
     public @ResponseBody LoginResponse Login(@RequestBody Map<String,String> params)
     {
-        LoginResponse resp = accountService.Login(params.get("identity"),params.get("password"));
-        return resp;
+        return accountService.Login(params.get("identity"),params.get("password"));
     }
 
     @PostMapping("/register")
-    public @ResponseBody String Register(@RequestBody RegisterModel register)
+    public @ResponseBody CommonResponse Register(@RequestBody RegisterModel register)
     {
-        accountService.Register(register);
-        return "OK!!";
+        return accountService.Register(register);
     }
 
     @RequestMapping("/checkregister")
-    public @ResponseBody
-    CommonResponse IfAccountRegistered(@RequestParam(name = "identity") String identity)
+    public @ResponseBody CommonResponse IfAccountRegistered(@RequestParam(name = "identity") String identity)
     {
         return accountService.DetectMultiRegister(identity);
     }

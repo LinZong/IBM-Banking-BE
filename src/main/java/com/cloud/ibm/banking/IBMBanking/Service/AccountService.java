@@ -101,7 +101,7 @@ public class AccountService
     public CommonResponse DetectMultiRegister(String identity)
     {
         int bucket = IdentityBucketIndex(identity);
-        boolean result = accountDao.IsAccountRegistered(identity,0);
+        boolean result = accountDao.IsAccountRegistered(identity,bucket);
         return new CommonResponse(result ? 1201 : 1200);
     }
 }
