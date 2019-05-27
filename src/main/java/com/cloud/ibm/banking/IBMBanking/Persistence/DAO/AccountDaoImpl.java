@@ -1,5 +1,6 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
+import com.cloud.ibm.banking.IBMBanking.Model.Request.RegisterModel;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.BucketNamingStrategyCollections;
@@ -11,6 +12,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigInteger;
 import java.util.List;
 
 
@@ -23,6 +25,60 @@ public class AccountDaoImpl
     public AccountDaoImpl()
     {
         sessionFactory = new Configuration().configure().buildSessionFactory();
+    }
+
+
+    public boolean IsAccountRegistered(String identity, int bucket)
+    {
+        try (Session session = sessionFactory.openSession())
+        {
+            SQL query = new SQL();
+            query
+                    .SELECT("COUNT(*)")
+                    .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                    .WHERE("identity = :id");
+
+            BigInteger count = (BigInteger) session.createSQLQuery(query.toString())
+                    .setParameter("id", identity)
+                    .getSingleResult();
+
+            return ((count).intValue() == 0);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+
+    public boolean RegisterAccount(RegisterModel model,int bucket)
+    {
+        Session session = sessionFactory.openSession();
+        Transaction tr = session.beginTransaction();
+        try
+        {
+            SQL query = new SQL();
+            query.INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                    .VALUES("password, identity",":pw, :id");
+
+            int effect = session.createSQLQuery(query.toString())
+                    .setParameter("pw",model.getPassword())
+                    .setParameter("id",model.getIdentity())
+                    .executeUpdate();
+
+            tr.commit();
+            return effect == 1;
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+            tr.rollback();
+        }
+        finally {
+            session.close();
+        }
+        return false;
     }
 
     public CustomerInformation0Entity GetCustomerInformation(int bucket, int id)

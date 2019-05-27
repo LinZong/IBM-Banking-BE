@@ -1,7 +1,7 @@
 package com.cloud.ibm.banking.IBMBanking.Controller;
 
 
-import com.cloud.ibm.banking.IBMBanking.Model.CommonResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
 
 import com.cloud.ibm.banking.IBMBanking.Service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;

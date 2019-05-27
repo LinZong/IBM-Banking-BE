@@ -1,6 +1,5 @@
-package com.cloud.ibm.banking.IBMBanking.Model;
+package com.cloud.ibm.banking.IBMBanking.Model.Response;
 
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
 
 public class LoginResponse extends CommonResponse

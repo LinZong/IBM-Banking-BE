@@ -1,4 +1,4 @@
-package com.cloud.ibm.banking.IBMBanking.Model;
+package com.cloud.ibm.banking.IBMBanking.Model.Response;
 
 public class CommonResponse
 {

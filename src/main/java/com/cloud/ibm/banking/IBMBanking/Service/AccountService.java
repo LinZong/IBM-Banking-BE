@@ -1,7 +1,9 @@
 package com.cloud.ibm.banking.IBMBanking.Service;
 
 
-import com.cloud.ibm.banking.IBMBanking.Model.LoginResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Request.RegisterModel;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.LoginResponse;
 import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
@@ -65,6 +67,42 @@ public class AccountService
              return new LoginResponse(1001,cust,bucket,user.getResult().getIdentity());
          }
          return new LoginResponse(1000,null,-1,null);
+    }
+
+    public static int IdentityBucketIndex(String identity)
+    {
+        long total = 0;
+        int identityLength = identity.length();
+        for (int i = 0; i < identityLength; i++) {
+            total += identity.charAt(i);
+        }
+
+        return (int) (total % 3);
+    }
+
+
+    public CommonResponse Register(RegisterModel register)
+    {
+        if(register.ValidModel())
+        {
+            int bucket = IdentityBucketIndex(register.getIdentity());
+            boolean FreshAccount = accountDao.IsAccountRegistered(register.getIdentity(),bucket);
+            if(FreshAccount)
+            {
+                // 执行写库逻辑
+                boolean OK = accountDao.RegisterAccount(register,bucket);
+                return new CommonResponse(OK ? 1302 : 1301);
+            }
+            return new CommonResponse(1303);
+        }
+        return new CommonResponse(1300); // 告知注册信息不合法
+    }
+
+    public CommonResponse DetectMultiRegister(String identity)
+    {
+        int bucket = IdentityBucketIndex(identity);
+        boolean result = accountDao.IsAccountRegistered(identity,0);
+        return new CommonResponse(result ? 1201 : 1200);
     }
 }
 

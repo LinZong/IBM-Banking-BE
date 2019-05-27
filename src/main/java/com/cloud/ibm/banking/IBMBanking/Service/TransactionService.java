@@ -1,16 +1,12 @@
 package com.cloud.ibm.banking.IBMBanking.Service;
 
-import com.cloud.ibm.banking.IBMBanking.Model.CommonResponse;
-import com.cloud.ibm.banking.IBMBanking.Model.LoginResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
 import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.WithBucket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 @Component
 public class TransactionService {
     @Autowired

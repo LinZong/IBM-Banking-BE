@@ -1,14 +1,13 @@
 package com.cloud.ibm.banking.IBMBanking.Controller.Login;
 
 
-import com.cloud.ibm.banking.IBMBanking.Model.LoginResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Request.RegisterModel;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.LoginResponse;
 import com.cloud.ibm.banking.IBMBanking.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -25,6 +24,20 @@ public class LoginController
     {
         LoginResponse resp = accountService.Login(params.get("identity"),params.get("password"));
         return resp;
+    }
+
+    @PostMapping("/register")
+    public @ResponseBody String Register(@RequestBody RegisterModel register)
+    {
+        accountService.Register(register);
+        return "OK!!";
+    }
+
+    @RequestMapping("/checkregister")
+    public @ResponseBody
+    CommonResponse IfAccountRegistered(@RequestParam(name = "identity") String identity)
+    {
+        return accountService.DetectMultiRegister(identity);
     }
 }
 
