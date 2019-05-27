@@ -104,6 +104,11 @@ public class AccountService
         boolean result = accountDao.IsAccountRegistered(identity,bucket);
         return new CommonResponse(result ? 1201 : 1200);
     }
+
+    public AccountInformation0Entity GetAccountInfo(int id, int bucket)
+    {
+        return accountDao.GetUserById(id,bucket);
+    }
 }
 
 

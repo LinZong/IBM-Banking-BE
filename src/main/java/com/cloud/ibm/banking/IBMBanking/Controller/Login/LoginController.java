@@ -4,6 +4,7 @@ package com.cloud.ibm.banking.IBMBanking.Controller.Login;
 import com.cloud.ibm.banking.IBMBanking.Model.Request.RegisterModel;
 import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
 import com.cloud.ibm.banking.IBMBanking.Model.Response.LoginResponse;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -35,6 +36,13 @@ public class LoginController
     public @ResponseBody CommonResponse IfAccountRegistered(@RequestParam(name = "identity") String identity)
     {
         return accountService.DetectMultiRegister(identity);
+    }
+
+    @RequestMapping("/account")
+    public @ResponseBody
+    AccountInformation0Entity AccountInfo(@RequestParam(name = "id") int id,@RequestParam(name = "bucket") int bucket)
+    {
+        return accountService.GetAccountInfo(id,bucket);
     }
 }
 

@@ -247,4 +247,37 @@ public class AccountDaoImpl
         }
         return null;
     }
+
+    public AccountInformation0Entity GetUserById(int id, int bucket)
+    {
+        Session session = sessionFactory.openSession();
+        try
+        {
+                SQL query = new SQL();
+                query
+                        .SELECT("*")
+                        .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                        .WHERE("id = :id");
+
+                List result = session.createSQLQuery(query.toString())
+                        .setParameter("id", id)
+                        .addEntity(AccountInformation0Entity.class)
+                        .getResultList();
+
+                if (!result.isEmpty())
+                {
+                    return (AccountInformation0Entity) result.get(0);
+                }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        } finally
+        {
+            if (session != null)
+            {
+                session.close();
+            }
+        }
+        return null;
+    }
 }
