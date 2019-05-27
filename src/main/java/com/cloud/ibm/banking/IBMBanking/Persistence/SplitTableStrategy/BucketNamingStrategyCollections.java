@@ -1,6 +1,5 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy;
 
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.BankingEntity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;

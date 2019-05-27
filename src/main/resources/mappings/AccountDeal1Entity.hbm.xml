@@ -4,12 +4,11 @@
     "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-    <class name="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity" table="account_deal0"
+    <class name="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity" table="account_deal1"
            schema="banking">
-        <id name="id" column="id"/>
+        <id name="uuid" column="uuid"/>
         <property name="time" column="time"/>
         <property name="amount" column="amount"/>
-        <property name="productId" column="product_id"/>
         <property name="accountId" column="account_id"/>
     </class>
 </hibernate-mapping>

@@ -118,11 +118,6 @@ public class AccountDaoImpl
                     .setParameter("id",id)
                     .executeUpdate();
 
-            /*
-                更新数据库不应该再采用getResultList()语句，而是应该使用executeUpdate语句执行SQL，并且接受此语句返回的受影响行数来确定数据有没有被真的更新
-
-                其次，数据库写入操作(update, insert)都需要手动启事务。不能不加事务读写。
-            * */
             tr.commit();
 
         } catch (Exception ex)
@@ -142,12 +137,7 @@ public class AccountDaoImpl
     public int withdraw_money(double money, int id, int bucket)
     {
         Session session = sessionFactory.openSession();
-//        if (!queryWithdrawAccount(id, payingPassword, bucket))
-//            return 1002; //支付密码错误
-//        else if (queryBalance(id, bucket) < money)
-//            return 1003;//余额不足
-//        else
-//        {
+
         Transaction tr = session.beginTransaction();
             try
             {

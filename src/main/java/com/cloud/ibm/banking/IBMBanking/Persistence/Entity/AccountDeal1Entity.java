@@ -4,12 +4,11 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "account_deal0", schema = "banking", catalog = "")
-public class AccountDeal0Entity {
+@Table(name = "account_deal1", schema = "banking", catalog = "")
+public class AccountDeal1Entity {
     private Long time;
     private Double amount;
-    private int id;
-    private int productId;
+    private String uuid;
     private int accountId;
 
     @Basic
@@ -33,23 +32,13 @@ public class AccountDeal0Entity {
     }
 
     @Id
-    @Column(name = "id")
-    public int getId() {
-        return id;
+    @Column(name = "uuid")
+    public String getUuid() {
+        return uuid;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    @Basic
-    @Column(name = "product_id")
-    public int getProductId() {
-        return productId;
-    }
-
-    public void setProductId(int productId) {
-        this.productId = productId;
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     @Basic
@@ -66,16 +55,15 @@ public class AccountDeal0Entity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AccountDeal0Entity that = (AccountDeal0Entity) o;
-        return id == that.id &&
-                productId == that.productId &&
-                accountId == that.accountId &&
+        AccountDeal1Entity that = (AccountDeal1Entity) o;
+        return accountId == that.accountId &&
                 Objects.equals(time, that.time) &&
-                Objects.equals(amount, that.amount);
+                Objects.equals(amount, that.amount) &&
+                Objects.equals(uuid, that.uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(time, amount, id, productId, accountId);
+        return Objects.hash(time, amount, uuid, accountId);
     }
 }
