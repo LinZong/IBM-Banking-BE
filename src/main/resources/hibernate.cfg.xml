@@ -21,16 +21,17 @@
         </property>
 
 
-
-        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal0Entity"/>
-        <mapping resource="mappings/AccountDeal0Entity.hbm.xml"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity"/>
         <mapping resource="mappings/AccountInformation0Entity.hbm.xml"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity"/>
         <mapping resource="mappings/CustomerInformation0Entity.hbm.xml"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.FinancialProductEntity"/>
         <mapping resource="mappings/FinancialProductEntity.hbm.xml"/>
-        <mapping resource="mappings/AccountDeal0Entity.hbm.xml"/>
+        <mapping resource="mappings/AccountDeal1Entity.hbm.xml"/>
+        <mapping resource="mappings/AccountDeal1Entity.hbm.xml"/>
+        <mapping resource="mappings/AccountFinancialProduct0Entity.hbm.xml"/>
+        <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountFinancialProduct0Entity"/>
 
     </session-factory>
 </hibernate-configuration>
