@@ -24,7 +24,7 @@ public class TransactionController {
     CommonResponse saveMoney(@RequestBody Map<String,String> params)
     {
        CommonResponse resp = transactionService.saveMoney(Double.parseDouble(params.get("money")),
-              Integer.parseInt(params.get("id")),Integer.parseInt(params.get("buckey")));
+              Integer.parseInt(params.get("id")),Integer.parseInt(params.get("bucket")));
         return resp;
     }
 

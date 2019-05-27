@@ -11,7 +11,7 @@
             <key-property name="identity" column="identity"/>
         </composite-id>
         <property name="password" column="password"/>
-        <property name="balance" column="balance"/>
+        <property name="balance" type="java.lang.Float" column="balance"/>
         <property name="manageType" column="manage_type"/>
         <property name="payingPassword" column="paying_password"/>
         <property name="lastDealTime" column="last_deal_time"/>

@@ -13,7 +13,7 @@ public class AccountInformation0Entity implements Serializable
 
     private int id;
     private String password;
-    private double balance;
+    private float balance;
     private int manageType;
     private int payingPassword;
     private String identity;
@@ -41,11 +41,11 @@ public class AccountInformation0Entity implements Serializable
 
     @Basic
     @Column(name = "balance")
-    public double getBalance() {
+    public float getBalance() {
         return balance;
     }
 
-    public void setBalance(double balance) {
+    public void setBalance(float balance) {
         this.balance = balance;
     }
 
