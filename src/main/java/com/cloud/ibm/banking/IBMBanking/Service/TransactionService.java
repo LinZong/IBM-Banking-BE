@@ -12,8 +12,8 @@ public class TransactionService {
     @Autowired
     private AccountDaoImpl accountDao;
 
-    public CommonResponse saveMoney(double money, int id, int buckey) {
-        int count = accountDao.save_money(money, id, buckey);
+    public CommonResponse saveMoney(double money, int id, int bucket) {
+        int count = accountDao.save_money(money, id, bucket);
         return new CommonResponse(count == 1 ? 1001 : 1000);
     }
 
