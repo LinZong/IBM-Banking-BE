@@ -190,6 +190,107 @@ public class AccountDaoImpl {
         return -1;
     }
 
+    public int modifyUserInfo(String name,String address,String telNum,String email,int bucket,int id)
+    {
+        Session session=sessionFactory.openSession();
+
+        Transaction tr = session.beginTransaction();
+
+        try {
+            SQL query = new SQL();
+            query
+                    .UPDATE(BucketNamingStrategyCollections.collections.get(CustomerInformation0Entity.class) + bucket)
+                    .SET("name = :name")
+                    .SET("address = :address")
+                    .SET("telNum = :telNum")
+                    .SET("email = :email")
+                    .WHERE("id = :id");
+
+            int effects = session.createSQLQuery(query.toString())
+                    .setParameter("name",name)
+                    .setParameter("id", id)
+                    .setParameter("address",address)
+                    .setParameter("telNum",telNum)
+                    .setParameter("email",email)
+                    .executeUpdate();
+
+            tr.commit();
+            return effects;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            tr.rollback();
+
+        } finally {
+            session.close();
+        }
+        return -1;
+
+    }
+
+    public int modifypassword(String password,int bucket,int id)
+    {
+        Session session=sessionFactory.openSession();
+
+        Transaction tr = session.beginTransaction();
+
+        try {
+            SQL query = new SQL();
+            query
+                    .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                    .SET("password = :password")
+                    .WHERE("id = :id");
+
+            int effects = session.createSQLQuery(query.toString())
+                    .setParameter("password",password)
+                    .setParameter("id", id)
+                    .executeUpdate();
+
+            tr.commit();
+            return effects;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            tr.rollback();
+
+        } finally {
+            session.close();
+        }
+        return -1;
+
+    }
+
+    public int modifyPayingPassword(int payingPassword,int bucket,int id)
+    {
+        Session session=sessionFactory.openSession();
+
+        Transaction tr = session.beginTransaction();
+
+        try {
+            SQL query = new SQL();
+            query
+                    .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                    .SET("payingPassword = :payingPassword")
+                    .WHERE("id = :id");
+
+            int effects = session.createSQLQuery(query.toString())
+                    .setParameter("payingPassword",payingPassword)
+                    .setParameter("id", id)
+                    .executeUpdate();
+
+            tr.commit();
+            return effects;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            tr.rollback();
+
+        } finally {
+            session.close();
+        }
+        return -1;
+
+    }
     public AccountInformation0Entity queryWithdrawAccount(int id, int bucket) {
 
         Session session = sessionFactory.openSession();
@@ -309,4 +410,6 @@ public class AccountDaoImpl {
         }
         return null;
     }
+
+
 }

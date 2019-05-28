@@ -50,7 +50,7 @@ public class TransactionService {
         WithBucket<AccountInformation0Entity> otherUser=accountDao.GetUserInfoByIdentity(otherIdentity);
         if(otherUser==null)
         {
-            return new CommonResponse(1100);
+            return new CommonResponse(1105);
         }
         else {
             int otherId=otherUser.getResult().getId();

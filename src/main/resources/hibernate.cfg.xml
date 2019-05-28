@@ -9,7 +9,7 @@
             org.hibernate.dialect.MySQLDialect
         </property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://192.168.88.234:3306/banking</property>
+        <property name="hibernate.connection.url">jdbc:mysql://192.168.88.125:9939/banking</property>
 
 
 
