@@ -13,7 +13,7 @@ public class ModifyPasswordService {
 
     public CommonResponse modifyPasswordService(String password, int bucket, int id)
     {
-        int count = accountDao.modifypassword(password,bucket,id);
+        int count = accountDao.modifyPassword(password,bucket,id);
         return new CommonResponse(count == 1 ? 1001 : 1000);
     }
 
