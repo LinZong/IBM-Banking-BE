@@ -29,6 +29,7 @@ public class ModifyPasswordController {
     @PostMapping("/oldPassword")
     public @ResponseBody
     CommonResponse oldPassword(@RequestBody Map<String, String> params) {
+
         CommonResponse resp = modifyPasswordService.oldPasswordService(params.get("password"),
                 Integer.parseInt(params.get("bucket")), Integer.parseInt(params.get("id")));
         return resp;
