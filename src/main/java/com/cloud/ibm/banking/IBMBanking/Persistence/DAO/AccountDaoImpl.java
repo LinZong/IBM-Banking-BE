@@ -370,7 +370,7 @@ public class AccountDaoImpl
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
-                    .SET("payingPassword = :payingPassword")
+                    .SET("paying_password = :payingPassword")
                     .WHERE("id = :id");
 
             int effects = session.createSQLQuery(query.toString())
