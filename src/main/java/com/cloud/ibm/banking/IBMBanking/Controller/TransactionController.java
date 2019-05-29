@@ -41,6 +41,7 @@ public class TransactionController {
     public @ResponseBody
     CommonResponse transfer(@RequestBody Map<String,String> params)
     {
+
         CommonResponse resp = transactionService.transfer(Double.parseDouble(params.get("money")),
                 Integer.parseInt(params.get("id")),Integer.parseInt(params.get("bucket")),
                 Integer.parseInt(params.get("payingPassword")),

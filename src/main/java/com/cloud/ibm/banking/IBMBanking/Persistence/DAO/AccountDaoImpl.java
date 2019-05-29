@@ -1,8 +1,10 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
 import com.cloud.ibm.banking.IBMBanking.Model.Request.RegisterModel;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.GenGUID;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.BucketNamingStrategyCollections;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.WithBucket;
 import org.apache.ibatis.jdbc.SQL;
@@ -121,8 +123,10 @@ public class AccountDaoImpl
                     .setParameter("id", id)
                     .executeUpdate();
 
+            int count1=writeIntoPipeLine(money,id,bucket,session);
+
             tr.commit();
-            return count;
+            return count+count1;
 
         } catch (Exception ex)
         {
@@ -138,6 +142,24 @@ public class AccountDaoImpl
         return 0;
     }
 
+    public int writeIntoPipeLine(double money, int id, int bucket,Session session)
+    {
+        SQL query1=new SQL();
+        query1
+                .INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class)+bucket)
+                .VALUES("time",":time")
+                .VALUES("amount",":amount")
+                .VALUES("uuid", ":uuid")
+                .VALUES("account_id",":account_id");
+
+        int count1= session.createSQLQuery(query1.toString())
+                .setParameter("time",timeStamp())
+                .setParameter("amount",money)
+                .setParameter("uuid",GenGUID.genGUID())
+                .setParameter("account_id",GetUserById(id,bucket).getId())
+                .executeUpdate();
+        return count1;
+    }
     public int withdraw_money(double money, int id, int bucket)
     {
         Session session = sessionFactory.openSession();
@@ -157,8 +179,9 @@ public class AccountDaoImpl
                     .setParameter("id", id)
                     .executeUpdate();
 
+            int count1=writeIntoPipeLine(-money,id,bucket,session);
             tr.commit();
-            return effects;
+            return effects+count1;
 
         } catch (Exception ex)
         {
@@ -191,6 +214,10 @@ public class AccountDaoImpl
                     .setParameter("lastDealTime",timeStamp())
                     .setParameter("id", id)
                     .executeUpdate();
+
+            int count1=writeIntoPipeLine(-money,id,bucket,session);
+
+
             SQL query1 = new SQL();
             query1
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + otherBucket)
@@ -202,15 +229,17 @@ public class AccountDaoImpl
                     .setParameter("otherId", otherId)
                     .executeUpdate();
 
-            int totalEffect = effects + effects1;
-            if (totalEffect != 2)
+            int count2=writeIntoPipeLine(money,otherId,otherBucket,session);
+
+            int totalEffect =effects+effects1+count1+count2;
+            if (totalEffect != 4)
             {
                 tr.rollback();
                 return -1;
             } else
             {
                 tr.commit();
-                return 2;
+                return 4;
             }
 
         } catch (Exception ex)
