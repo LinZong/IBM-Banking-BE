@@ -21,7 +21,7 @@ public class ModifyPasswordService {
     public CommonResponse oldPasswordService(String oldPassword, int bucket, int id)
     {
        String password = accountDao.oldPassword(bucket,id);
-        return new CommonResponse(password.equals(oldPassword) ? 1001 : 1000);
+        return new CommonResponse(password.equals(oldPassword) ? 1002 : 1003);
     }
 
     public CommonResponse modifyPayingPasswordService(int payingPassword, int bucket, int id)
@@ -33,6 +33,6 @@ public class ModifyPasswordService {
     public CommonResponse oldPayingPasswordService(int oldPayingPassword, int bucket, int id)
     {
         int payingPassword = accountDao.oldPayingPassword(bucket,id);
-        return new CommonResponse(payingPassword==oldPayingPassword ? 1001 : 1000);
+        return new CommonResponse(payingPassword==oldPayingPassword ? 1002 : 1003);
     }
 }

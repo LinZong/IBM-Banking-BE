@@ -14,7 +14,7 @@ public class TransactionService {
 
     public CommonResponse saveMoney(double money, int id, int bucket) {
         int count = accountDao.save_money(money, id, bucket);
-        return new CommonResponse(count == 1 ? 1001 : 1000);
+        return new CommonResponse(count == 2 ? 1001 : 1000);
     }
 
     public CommonResponse withdrawMoney(double money, int id, int bucket, int payingPassword) {
@@ -36,7 +36,7 @@ public class TransactionService {
             }
             else {
                 int effect = accountDao.withdraw_money(money,id, bucket);
-                return new CommonResponse(effect == 1 ? 1100 : 1103);
+                return new CommonResponse(effect == 2 ? 1100 : 1103);
             }
         }
         else {
@@ -67,7 +67,7 @@ public class TransactionService {
                     return new CommonResponse(1102);
                 } else {
                     int effect = accountDao.transfer_money(money, id, bucket,otherId,otherIdentity);
-                    return new CommonResponse(effect == 2 ? 1100 : 1103);//TODO 1103数据库写入失败
+                    return new CommonResponse(effect == 4 ? 1100 : 1103);//TODO 1103数据库写入失败
                 }
             } else {
                 // TODO 返回账号不存在
