@@ -1,5 +1,6 @@
 package com.cloud.ibm.banking.IBMBanking;
 
+import com.cloud.ibm.banking.IBMBanking.Service.FinancialProductsService;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

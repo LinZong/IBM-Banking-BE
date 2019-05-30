@@ -1,25 +1,27 @@
 package com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy;
 
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity;
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.BankingEntity;
-import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.*;
 
 import java.util.HashMap;
 
 public class BucketNamingStrategyCollections
 {
     public static final HashMap<Class<? extends BankingEntity>, String> collections = new HashMap<>();
-    public static final int TableRange = 3;
+    public static final int TableRange = 5;
     public static final Class[] Buckets = new Class[]{
             AccountInformation0Entity.class,
             CustomerInformation0Entity.class,
-            AccountDeal1Entity.class};
+            AccountDeal1Entity.class,
+            AccountFinancialProduct0Entity.class,
+            FinancialProductEntity.class
+    };
 
     public static final String[] BucketPrefix = new String[]{
             "account_information",
             "customer_information",
-            "account_deal"
+            "account_deal",
+            "account_financial_product",
+            "financial_product"
     };
 
     static {
