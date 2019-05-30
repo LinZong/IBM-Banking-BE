@@ -14,6 +14,11 @@ public class FinancialProductsService {
     public CommonResponse financialProducts(int account_id,double money,int bucket)
     {
         int count = accountDao.buyProduct1( account_id,money, bucket);
-        return new CommonResponse(count == 2 ? 1001 : 1000);
+        if(count==1)
+            return new CommonResponse(1001);
+        else if(count==2)
+            return new CommonResponse(1002);
+        else
+            return new CommonResponse(1000);
     }
 }

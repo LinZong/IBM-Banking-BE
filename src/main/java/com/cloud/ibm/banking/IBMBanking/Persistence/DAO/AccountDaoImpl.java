@@ -2,6 +2,7 @@ package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
 import com.cloud.ibm.banking.IBMBanking.Model.Request.RegisterModel;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountFinancialProduct0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.GenGUID;
@@ -24,21 +25,16 @@ import static com.cloud.ibm.banking.IBMBanking.Service.AccountService.IdentityBu
 
 
 @Repository
-public class AccountDaoImpl
-{
+public class AccountDaoImpl {
 
     private SessionFactory sessionFactory;
 
-    public AccountDaoImpl()
-    {
+    public AccountDaoImpl() {
         sessionFactory = new Configuration().configure().buildSessionFactory();
     }
 
-
-    public boolean IsAccountRegistered(String identity, int bucket)
-    {
-        try (Session session = sessionFactory.openSession())
-        {
+    public boolean IsAccountRegistered(String identity, int bucket) {
+        try (Session session = sessionFactory.openSession()) {
             SQL query = new SQL();
             query
                     .SELECT("COUNT(*)")
@@ -50,20 +46,16 @@ public class AccountDaoImpl
                     .getSingleResult();
 
             return ((count).intValue() == 0);
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         return false;
     }
 
-
-    public boolean RegisterAccount(RegisterModel model, int bucket)
-    {
+    public boolean RegisterAccount(RegisterModel model, int bucket) {
         Session session = sessionFactory.openSession();
         Transaction tr = session.beginTransaction();
-        try
-        {
+        try {
             SQL query = new SQL();
             query.INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
                     .VALUES("password, identity", ":pw, :id");
@@ -73,11 +65,11 @@ public class AccountDaoImpl
                     .setParameter("id", model.getIdentity())
                     .executeUpdate();
 
-            if(effect == 1) {
+            if (effect == 1) {
 
                 SQL cust = new SQL();
 
-                        cust.SELECT("*")
+                cust.SELECT("*")
                         .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
                         .WHERE("identity = :id");
 
@@ -86,50 +78,43 @@ public class AccountDaoImpl
                         .addEntity(AccountInformation0Entity.class)
                         .getResultList();
 
-                if(!result.isEmpty()) {
+                if (!result.isEmpty()) {
 
                     SQL customer = new SQL();
                     customer.INSERT_INTO(BucketNamingStrategyCollections.collections.get(CustomerInformation0Entity.class) + bucket)
-                            .VALUES("id",":id");
+                            .VALUES("id", ":id");
 
                     int insertedCust = session.createSQLQuery(customer.toString())
-                            .setParameter("id", ((AccountInformation0Entity)result.get(0)).getId())
+                            .setParameter("id", ((AccountInformation0Entity) result.get(0)).getId())
                             .executeUpdate();
-                    if(insertedCust == 1) {
+                    if (insertedCust == 1) {
                         tr.commit();
                         return true;
-                    }
-                    else {
+                    } else {
                         tr.rollback();
                         return false;
                     }
-                }
-                else {
+                } else {
 
                     tr.rollback();
                     return false;
                 }
 
-            }
-            else {
+            } else {
                 tr.rollback();
                 return false;
             }
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             tr.rollback();
-        } finally
-        {
+        } finally {
             session.close();
         }
         return false;
     }
 
-    public CustomerInformation0Entity GetCustomerInformation(int bucket, int id)
-    {
-        try (Session session = sessionFactory.openSession())
-        {
+    public CustomerInformation0Entity GetCustomerInformation(int bucket, int id) {
+        try (Session session = sessionFactory.openSession()) {
             SQL query = new SQL();
             query
                     .SELECT("*")
@@ -145,69 +130,62 @@ public class AccountDaoImpl
         }
     }
 
-    public int save_money(double money, int id, int bucket)
-    {
+    public int save_money(double money, int id, int bucket) {
         Session session = sessionFactory.openSession();
         Transaction tr = session.beginTransaction();
-        try
-        {
+        try {
 
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
-                    .SET("balance = balance + :money","last_deal_time = :lastDealTime")
+                    .SET("balance = balance + :money", "last_deal_time = :lastDealTime")
                     .WHERE("id = :id");
 
             int count = session.createSQLQuery(query.toString())
-                    .setParameter("money",  money)
-                    .setParameter("lastDealTime",timeStamp())
+                    .setParameter("money", money)
+                    .setParameter("lastDealTime", timeStamp())
                     .setParameter("id", id)
                     .executeUpdate();
 
-            int count1=writeIntoPipeLine(money,id,bucket,session);
+            int count1 = writeIntoPipeLine(money, id, bucket, session);
 
             tr.commit();
-            return count+count1;
+            return count + count1;
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             tr.rollback();
-        } finally
-        {
-            if (session != null)
-            {
+        } finally {
+            if (session != null) {
                 session.close();
             }
         }
         return 0;
     }
 
-    public int writeIntoPipeLine(double money, int id, int bucket,Session session)
-    {
-        SQL query1=new SQL();
+    public int writeIntoPipeLine(double money, int id, int bucket, Session session) {
+        SQL query1 = new SQL();
         query1
-                .INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class)+bucket)
-                .VALUES("time",":time")
-                .VALUES("amount",":amount")
+                .INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class) + bucket)
+                .VALUES("time", ":time")
+                .VALUES("amount", ":amount")
                 .VALUES("uuid", ":uuid")
-                .VALUES("account_id",":account_id");
+                .VALUES("account_id", ":account_id");
 
-        int count1= session.createSQLQuery(query1.toString())
-                .setParameter("time",timeStamp())
-                .setParameter("amount",money)
-                .setParameter("uuid",GenGUID.genGUID())
-                .setParameter("account_id",GetUserById(id,bucket).getId())
+        int count1 = session.createSQLQuery(query1.toString())
+                .setParameter("time", timeStamp())
+                .setParameter("amount", money)
+                .setParameter("uuid", GenGUID.genGUID())
+                .setParameter("account_id", GetUserById(id, bucket).getId())
                 .executeUpdate();
         return count1;
     }
-    public int withdraw_money(double money, int id, int bucket)
-    {
+
+    public int withdraw_money(double money, int id, int bucket) {
         Session session = sessionFactory.openSession();
 
         Transaction tr = session.beginTransaction();
-        try
-        {
+        try {
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
@@ -220,89 +198,79 @@ public class AccountDaoImpl
                     .setParameter("id", id)
                     .executeUpdate();
 
-            int count1=writeIntoPipeLine(-money,id,bucket,session);
+            int count1 = writeIntoPipeLine(-money, id, bucket, session);
             tr.commit();
-            return effects+count1;
+            return effects + count1;
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             tr.rollback();
 
-        } finally
-        {
+        } finally {
             session.close();
         }
         return -1;
     }
 
-    public int transfer_money(double money, int id, int bucket, int otherId, String otherIdentity)
-    {
+    public int transfer_money(double money, int id, int bucket, int otherId, String otherIdentity) {
         Session session = sessionFactory.openSession();
 
         Transaction tr = session.beginTransaction();
         int otherBucket = IdentityBucketIndex(otherIdentity);
-        try
-        {
+        try {
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
-                    .SET("balance = balance - :money","last_deal_time = :lastDealTime")
+                    .SET("balance = balance - :money", "last_deal_time = :lastDealTime")
                     .WHERE("id = :id");
 
             int effects = session.createSQLQuery(query.toString())
                     .setParameter("money", money)
-                    .setParameter("lastDealTime",timeStamp())
+                    .setParameter("lastDealTime", timeStamp())
                     .setParameter("id", id)
                     .executeUpdate();
 
-            int count1=writeIntoPipeLine(-money,id,bucket,session);
+            int count1 = writeIntoPipeLine(-money, id, bucket, session);
 
 
             SQL query1 = new SQL();
             query1
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + otherBucket)
-                    .SET("balance = balance + :money","last_deal_time = :lastDealTime")
+                    .SET("balance = balance + :money", "last_deal_time = :lastDealTime")
                     .WHERE("id = :otherId");
             int effects1 = session.createSQLQuery(query1.toString())
                     .setParameter("money", money)
-                    .setParameter("lastDealTime",timeStamp())
+                    .setParameter("lastDealTime", timeStamp())
                     .setParameter("otherId", otherId)
                     .executeUpdate();
 
-            int count2=writeIntoPipeLine(money,otherId,otherBucket,session);
+            int count2 = writeIntoPipeLine(money, otherId, otherBucket, session);
 
-            int totalEffect =effects+effects1+count1+count2;
-            if (totalEffect != 4)
-            {
+            int totalEffect = effects + effects1 + count1 + count2;
+            if (totalEffect != 4) {
                 tr.rollback();
                 return -1;
-            } else
-            {
+            } else {
                 tr.commit();
                 return 4;
             }
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             tr.rollback();
 
-        } finally
-        {
+        } finally {
             session.close();
         }
         return -1;
     }
 
-    public int modifyUserInfo(String name, String address, String telNum, String email, int bucket, int id)
-    {
+    public int modifyUserInfo(String name, String address, String telNum, String email, int bucket, int id) {
         Session session = sessionFactory.openSession();
 
         Transaction tr = session.beginTransaction();
 
-        try
-        {
+        try {
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(CustomerInformation0Entity.class) + bucket)
@@ -323,27 +291,23 @@ public class AccountDaoImpl
             tr.commit();
             return effects;
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             tr.rollback();
 
-        } finally
-        {
+        } finally {
             session.close();
         }
         return -1;
 
     }
 
-    public int modifyPassword(String password, int bucket, int id)
-    {
+    public int modifyPassword(String password, int bucket, int id) {
         Session session = sessionFactory.openSession();
 
         Transaction tr = session.beginTransaction();
 
-        try
-        {
+        try {
             SQL query = new SQL();
             query
                     .UPDATE(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
@@ -358,25 +322,21 @@ public class AccountDaoImpl
             tr.commit();
             return effects;
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
             tr.rollback();
 
-        } finally
-        {
+        } finally {
             session.close();
         }
         return -1;
 
     }
 
-    public String oldPassword(int bucket, int id)
-    {
+    public String oldPassword(int bucket, int id) {
         Session session = sessionFactory.openSession();
 
-        try
-        {
+        try {
             SQL query = new SQL();
             query
                     .SELECT("password")
@@ -390,22 +350,18 @@ public class AccountDaoImpl
 
             return result;
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        } finally
-        {
+        } finally {
             session.close();
         }
         return null;
     }
 
-    public int oldPayingPassword(int bucket, int id)
-    {
+    public int oldPayingPassword(int bucket, int id) {
         Session session = sessionFactory.openSession();
 
-        try
-        {
+        try {
             SQL query = new SQL();
             query
                     .SELECT("paying_password")
@@ -418,53 +374,120 @@ public class AccountDaoImpl
 
             return result;
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        } finally
-        {
+        } finally {
             session.close();
         }
         return -1;
 
     }
-    public List<AccountDeal1Entity> pipeLine(int id,int bucket,String timeBegin,String timeEnd)
-    {
+
+    public List<AccountDeal1Entity> pipeLine(int id, int bucket, String timeBegin, String timeEnd) {
         Session session = sessionFactory.openSession();
-        int tableCount = BucketNamingStrategyCollections.TableRange;
-        try
-        {
-                SQL query = new SQL();
-                query
-                        .SELECT("*")
-                        .FROM(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class) + bucket)
-                        .WHERE("account_id = :id AND time >= :time_begin AND time < :time_end");
+        try {
+            SQL query = new SQL();
+            query
+                    .SELECT("*")
+                    .FROM(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class) + bucket)
+                    .WHERE("account_id = :id AND time >= :time_begin AND time < :time_end");
 
-                List result = session.createSQLQuery(query.toString())
-                        .setParameter("id", id)
-                        .setParameter("time_begin",Long.parseLong(timeBegin))
-                        .setParameter("time_end",Long.parseLong(timeEnd))
-                        .addEntity(AccountDeal1Entity.class)
-                        .getResultList();
-                if (!result.isEmpty())
-                {
-                    return result;
-                }
+            List result = session.createSQLQuery(query.toString())
+                    .setParameter("id", id)
+                    .setParameter("time_begin", Long.parseLong(timeBegin))
+                    .setParameter("time_end", Long.parseLong(timeEnd))
+                    .addEntity(AccountDeal1Entity.class)
+                    .getResultList();
+            if (!result.isEmpty()) {
+                return result;
+            }
 
-        } catch (Exception ex)
-        {
+        } catch (Exception ex) {
             ex.printStackTrace();
-        } finally
-        {
+        } finally {
             session.close();
         }
         return null;
     }
 
-    public int buyProduct1(int id,double money,int bucket)
+    public int buyProduct1(int id, double money, int bucket) {
+        Session session = sessionFactory.openSession();
+
+        if (ifHaveBuyProduct1(id, bucket, session)) {
+            Transaction tr = session.beginTransaction();
+            try {
+
+                SQL query = new SQL();
+                query
+                        .UPDATE(BucketNamingStrategyCollections.collections.get(AccountFinancialProduct0Entity.class) + bucket)
+                        .SET("balance = balance+ :money")
+                        .WHERE("account_id = :id");
+
+                int effects = session.createSQLQuery(query.toString())
+                        .setParameter("money", money)
+                        .setParameter("id", id)
+                        .executeUpdate();
+
+                tr.commit();
+                return effects;
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                tr.rollback();
+
+            } finally {
+                session.close();
+            }
+            return -1;
+        }
+    else
     {
-       return -1;
+        return registerProduct1(money,id,bucket,session)+1;
     }
+}
+    public int registerProduct1(double money, int id, int bucket,Session session) {
+        SQL query1 = new SQL();
+        query1
+                .INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountFinancialProduct0Entity.class) + bucket)
+                .VALUES("balance", ":money")
+                .VALUES("account_id", ":account_id");
+
+        int count1 = session.createSQLQuery(query1.toString())
+                .setParameter("money", money)
+                .setParameter("account_id",id)
+                .executeUpdate();
+        return count1;
+    }
+
+    public boolean ifHaveBuyProduct1(int id,int bucket,Session session)
+    {
+        try
+        {
+            SQL query = new SQL();
+            query
+                    .SELECT("*")
+                    .FROM(BucketNamingStrategyCollections.collections.get(AccountFinancialProduct0Entity.class) + bucket)
+                    .WHERE("account_id = :id");
+
+            List result = session.createSQLQuery(query.toString())
+                    .setParameter("id", id)
+                    .addEntity(AccountFinancialProduct0Entity.class)
+                    .getResultList();
+
+            if (!result.isEmpty())
+            {
+                return true;
+            }
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+
+        } finally
+        {
+        }
+        return false;
+    }
+
     public int modifyPayingPassword(int payingPassword, int bucket, int id)
     {
         Session session = sessionFactory.openSession();
@@ -535,7 +558,6 @@ public class AccountDaoImpl
         }
         return null;
     }
-
 
     public WithBucket<AccountInformation0Entity> GetUserByIdentity(String identity, String password)
     {
