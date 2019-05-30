@@ -20,7 +20,6 @@
             ibmbanking123.
         </property>
 
-
         <property name="hibernate.c3p0.acquire_increment">1</property>
         <property name="hibernate.c3p0.idle_test_period">0</property>
         <property name="hibernate.c3p0.timeout">0</property>
@@ -41,6 +40,7 @@
         <mapping resource="mappings/AccountDeal1Entity.hbm.xml"/>
         <mapping resource="mappings/AccountFinancialProduct0Entity.hbm.xml"/>
         <mapping class="com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountFinancialProduct0Entity"/>
+        <mapping resource="mappings/AccountFinancialProduct0Entity.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>
