@@ -14,6 +14,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.springframework.stereotype.Repository;
 
+import javax.management.Query;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -72,8 +73,48 @@ public class AccountDaoImpl
                     .setParameter("id", model.getIdentity())
                     .executeUpdate();
 
-            tr.commit();
-            return effect == 1;
+            if(effect == 1) {
+
+                SQL cust = new SQL();
+
+                        cust.SELECT("*")
+                        .FROM(BucketNamingStrategyCollections.collections.get(AccountInformation0Entity.class) + bucket)
+                        .WHERE("identity = :id");
+
+                List result = session.createSQLQuery(cust.toString())
+                        .setParameter("id", model.getIdentity())
+                        .addEntity(AccountInformation0Entity.class)
+                        .getResultList();
+
+                if(!result.isEmpty()) {
+
+                    SQL customer = new SQL();
+                    customer.INSERT_INTO(BucketNamingStrategyCollections.collections.get(CustomerInformation0Entity.class) + bucket)
+                            .VALUES("id",":id");
+
+                    int insertedCust = session.createSQLQuery(customer.toString())
+                            .setParameter("id", ((AccountInformation0Entity)result.get(0)).getId())
+                            .executeUpdate();
+                    if(insertedCust == 1) {
+                        tr.commit();
+                        return true;
+                    }
+                    else {
+                        tr.rollback();
+                        return false;
+                    }
+                }
+                else {
+
+                    tr.rollback();
+                    return false;
+                }
+
+            }
+            else {
+                tr.rollback();
+                return false;
+            }
         } catch (Exception ex)
         {
             ex.printStackTrace();
