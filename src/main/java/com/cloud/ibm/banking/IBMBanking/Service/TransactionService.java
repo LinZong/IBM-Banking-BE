@@ -1,6 +1,7 @@
 package com.cloud.ibm.banking.IBMBanking.Service;
 
 import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.DealResponse;
 import com.cloud.ibm.banking.IBMBanking.Model.Response.pipeLineResponse;
 import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity;
@@ -15,6 +16,13 @@ import java.util.List;
 public class TransactionService {
     @Autowired
     private AccountDaoImpl accountDao;
+
+
+    public DealResponse QueryMyDeal(Long begin,Long end,int id,int bucket)
+    {
+        List<AccountDeal1Entity> query = accountDao.QueryMyDeal(id,bucket,begin,end);
+        return new DealResponse(query != null ? 1001 : 1000,query);
+    }
 
     public CommonResponse saveMoney(double money, int id, int bucket) {
         int count = accountDao.save_money(money, id, bucket);

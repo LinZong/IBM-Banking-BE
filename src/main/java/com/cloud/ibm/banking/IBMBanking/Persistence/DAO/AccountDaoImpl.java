@@ -13,9 +13,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
-
-import javax.management.Query;
 import java.math.BigInteger;
 import java.util.List;
 
@@ -50,6 +50,50 @@ public class AccountDaoImpl {
             ex.printStackTrace();
         }
         return false;
+    }
+
+
+    public List<AccountDeal1Entity> QueryMyDeal(int accountId,int bucket,Long begin, Long end)
+    {
+
+        Session session = sessionFactory.openSession();
+        try {
+
+            SQL deals = new SQL();
+            deals.SELECT("*")
+                    .FROM(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class) + bucket)
+                    .WHERE("account_id = :acc_id");
+
+            if(begin != null) {
+                deals.WHERE("time >= :timebegin");
+            }
+            if(end != null) {
+                deals.WHERE("time < :timeend");
+            }
+            deals.ORDER_BY("time desc");
+
+
+            Query query = session.createSQLQuery(deals.toString())
+                    .setParameter("acc_id",accountId);
+
+            if(begin != null) {
+                query.setParameter("timebegin",begin);
+            }
+            if(end != null) {
+                query.setParameter("timeend",end);
+            }
+            ((NativeQuery) query).addEntity(AccountDeal1Entity.class);
+
+            return query.getResultList();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally
+        {
+            session.close();
+        }
+        return null;
     }
 
     public boolean RegisterAccount(RegisterModel model, int bucket) {

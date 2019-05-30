@@ -3,6 +3,9 @@ package com.cloud.ibm.banking.IBMBanking.Controller;
 
 import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
 
+import com.cloud.ibm.banking.IBMBanking.Model.Response.DealResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.FinancialResponse;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity;
 import com.cloud.ibm.banking.IBMBanking.Service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -18,6 +22,18 @@ import java.util.Map;
 public class TransactionController {
     @Autowired
     private TransactionService transactionService;
+
+    @PostMapping("/mydeal")
+    public @ResponseBody DealResponse QueryMyDeal(@RequestBody Map<String,String> params)
+    {
+        int id = Integer.parseInt(params.get("account_id"));
+        int bucket = Integer.parseInt(params.get("bucket"));
+        Long begin = params.getOrDefault("timebegin", "").equals("") ? null : Long.parseLong(params.get("timebegin"));
+        Long end = params.getOrDefault("timeend", "").equals("") ? null : Long.parseLong(params.get("timeend"));
+
+        return transactionService.QueryMyDeal(begin,end,id,bucket);
+
+    }
 
     @PostMapping("/save")
     public @ResponseBody
