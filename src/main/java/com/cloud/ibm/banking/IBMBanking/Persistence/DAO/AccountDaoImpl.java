@@ -422,7 +422,7 @@ public class AccountDaoImpl
 
     public int buyProduct1(int id,double money,int bucket)
     {
-        return -1;
+       return -1;
     }
     public int modifyPayingPassword(int payingPassword, int bucket, int id)
     {
