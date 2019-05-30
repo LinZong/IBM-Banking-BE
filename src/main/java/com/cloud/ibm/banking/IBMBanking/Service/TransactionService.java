@@ -1,11 +1,17 @@
 package com.cloud.ibm.banking.IBMBanking.Service;
 
 import com.cloud.ibm.banking.IBMBanking.Model.Response.CommonResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.LoginResponse;
+import com.cloud.ibm.banking.IBMBanking.Model.Response.pipeLineResponse;
 import com.cloud.ibm.banking.IBMBanking.Persistence.DAO.AccountDaoImpl;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountDeal1Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.CustomerInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.WithBucket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class TransactionService {
@@ -15,6 +21,15 @@ public class TransactionService {
     public CommonResponse saveMoney(double money, int id, int bucket) {
         int count = accountDao.save_money(money, id, bucket);
         return new CommonResponse(count == 2 ? 1001 : 1000);
+    }
+
+    public pipeLineResponse queryPipeLine(int id,int bucket,String timeBegin,String timeEnd) {
+        List<AccountDeal1Entity> pipeLine = accountDao.pipeLine(id,bucket,timeBegin,timeEnd);
+        if(pipeLine!=null)
+        {
+            return new pipeLineResponse(1001,pipeLine);
+        }
+        return new pipeLineResponse(1000,null);
     }
 
     public CommonResponse withdrawMoney(double money, int id, int bucket, int payingPassword) {

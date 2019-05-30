@@ -387,7 +387,38 @@ public class AccountDaoImpl
         return -1;
 
     }
+    public List<AccountDeal1Entity> pipeLine(int id,int bucket,String timeBegin,String timeEnd)
+    {
+        Session session = sessionFactory.openSession();
+        int tableCount = BucketNamingStrategyCollections.TableRange;
+        try
+        {
+                SQL query = new SQL();
+                query
+                        .SELECT("*")
+                        .FROM(BucketNamingStrategyCollections.collections.get(AccountDeal1Entity.class) + bucket)
+                        .WHERE("account_id = :id AND time >= :time_begin AND time < :time_end");
 
+                List result = session.createSQLQuery(query.toString())
+                        .setParameter("id", id)
+                        .setParameter("time_begin",Long.parseLong(timeBegin))
+                        .setParameter("time_end",Long.parseLong(timeEnd))
+                        .addEntity(AccountDeal1Entity.class)
+                        .getResultList();
+                if (!result.isEmpty())
+                {
+                    return result;
+                }
+
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        } finally
+        {
+            session.close();
+        }
+        return null;
+    }
     public int modifyPayingPassword(int payingPassword, int bucket, int id)
     {
         Session session = sessionFactory.openSession();
@@ -420,7 +451,6 @@ public class AccountDaoImpl
             session.close();
         }
         return -1;
-
     }
 
     public AccountInformation0Entity queryWithdrawAccount(int id, int bucket)
@@ -429,6 +459,7 @@ public class AccountDaoImpl
         Session session = sessionFactory.openSession();
         try
         {
+
             SQL query = new SQL();
             query
                     .SELECT("*")
