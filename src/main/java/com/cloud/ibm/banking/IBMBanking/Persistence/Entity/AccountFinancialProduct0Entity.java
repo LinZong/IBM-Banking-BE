@@ -12,6 +12,7 @@ public class AccountFinancialProduct0Entity {
     private int status;
     private Long withdrawTime;
     private int accountId;
+    private Double balance;
 
     @Id
     @Column(name = "id")
@@ -73,6 +74,16 @@ public class AccountFinancialProduct0Entity {
         this.accountId = accountId;
     }
 
+    @Basic
+    @Column(name = "balance")
+    public Double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(Double balance) {
+        this.balance = balance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -83,11 +94,12 @@ public class AccountFinancialProduct0Entity {
                 buyTime == that.buyTime &&
                 status == that.status &&
                 accountId == that.accountId &&
-                Objects.equals(withdrawTime, that.withdrawTime);
+                Objects.equals(withdrawTime, that.withdrawTime) &&
+                Objects.equals(balance, that.balance);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, productId, buyTime, status, withdrawTime, accountId);
+        return Objects.hash(id, productId, buyTime, status, withdrawTime, accountId, balance);
     }
 }
