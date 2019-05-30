@@ -410,6 +410,8 @@ public class AccountDaoImpl {
         return null;
     }
 
+
+
     public int buyProduct1(int id, double money, int bucket) {
         Session session = sessionFactory.openSession();
 
@@ -420,7 +422,7 @@ public class AccountDaoImpl {
                 SQL query = new SQL();
                 query
                         .UPDATE(BucketNamingStrategyCollections.collections.get(AccountFinancialProduct0Entity.class) + bucket)
-                        .SET("balance = balance+ :money")
+                        .SET("balance = balance + :money")
                         .WHERE("account_id = :id");
 
                 int effects = session.createSQLQuery(query.toString())
