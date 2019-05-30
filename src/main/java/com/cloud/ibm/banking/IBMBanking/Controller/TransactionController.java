@@ -48,4 +48,14 @@ public class TransactionController {
                params.get("otherIdentity"));
         return resp;
     }
+
+    @PostMapping("/pipeLine")
+    public @ResponseBody
+    CommonResponse QueryPipeLine(@RequestBody Map<String,String> params)
+    {
+        CommonResponse resp = transactionService.queryPipeLine(Integer.parseInt(params.get("id")),
+                Integer.parseInt(params.get("bucket")),
+                params.get("time1"), params.get("time2"));
+        return resp;
+    }
 }
