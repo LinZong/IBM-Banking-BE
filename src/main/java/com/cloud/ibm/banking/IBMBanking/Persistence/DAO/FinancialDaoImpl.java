@@ -2,6 +2,7 @@ package com.cloud.ibm.banking.IBMBanking.Persistence.DAO;
 
 
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountFinancialProduct0Entity;
+import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.AccountInformation0Entity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Entity.FinancialProductEntity;
 import com.cloud.ibm.banking.IBMBanking.Persistence.Helper.DateUtil;
 import com.cloud.ibm.banking.IBMBanking.Persistence.SplitTableStrategy.BucketNamingStrategyCollections;
@@ -65,6 +66,7 @@ public class FinancialDaoImpl {
                             .setParameter("record_id", buyRecord.get(0).getId())
                             .executeUpdate();
                     if (appendBuyEffect == 1) {
+                        accountDao.withdraw_money(ValueCount,AccountID,bucket);
                         tr.commit();
                         return true;
                     } else {
@@ -73,32 +75,31 @@ public class FinancialDaoImpl {
                     }
                 }
             }
-
             // 新增购买, 与追加购买但是数据库中没有记录的情况合并
 
+                SQL firstBuy = new SQL();
 
-            SQL firstBuy = new SQL();
+                firstBuy.INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountFinancialProduct0Entity.class) + bucket)
+                        .VALUES("product_id", ":prod_id")
+                        .VALUES("buy_time", ":buy_time")
+                        .VALUES("status", "1")
+                        .VALUES("account_id", String.valueOf(AccountID))
+                        .VALUES("balance", ":balance");
 
-            firstBuy.INSERT_INTO(BucketNamingStrategyCollections.collections.get(AccountFinancialProduct0Entity.class) + bucket)
-                    .VALUES("product_id", ":prod_id")
-                    .VALUES("buy_time", ":buy_time")
-                    .VALUES("status", "1")
-                    .VALUES("account_id", String.valueOf(AccountID))
-                    .VALUES("balance", ":balance");
+                int firstBuyEffect = session.createSQLQuery(firstBuy.toString())
+                        .setParameter("prod_id", ProductID)
+                        .setParameter("buy_time", DateUtil.timeStamp())
+                        .setParameter("balance", ValueCount)
+                        .executeUpdate();
 
-            int firstBuyEffect = session.createSQLQuery(firstBuy.toString())
-                    .setParameter("prod_id", ProductID)
-                    .setParameter("buy_time", DateUtil.timeStamp())
-                    .setParameter("balance", ValueCount)
-                    .executeUpdate();
-
-            if (firstBuyEffect == 1) {
-                tr.commit();
-                return true;
-            } else {
-                tr.rollback();
-                return false;
-            }
+                if (firstBuyEffect == 1) {
+                    accountDao.withdraw_money(ValueCount,AccountID,bucket);
+                    tr.commit();
+                    return true;
+                } else {
+                    tr.rollback();
+                    return false;
+                }
 
 
         } catch (Exception ex) {
